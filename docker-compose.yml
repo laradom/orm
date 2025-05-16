@@ -1,0 +1,9 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      PHP_IDE_CONFIG: "serverName=laradom.orm"
+    volumes:
+      - .:/var/www/app
