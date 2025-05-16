@@ -24,6 +24,13 @@
       "Laradom\\Tests\\": "tests/"
     }
   },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Laradom\\ORM\\LaradomServiceProvider"
+      ]
+    }
+  },
   "require-dev": {
     "phpunit/phpunit": "^10.0",
     "orchestra/testbench": "^8.0",
