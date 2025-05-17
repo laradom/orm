@@ -19,11 +19,11 @@ class LaradomServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->singleton(DriverInterface::class, function () {
-            new (config('laradom.config.metadata.driver', AttributeDriver::class))();
+            return new (config('laradom.config.metadata.driver', AttributeDriver::class))();
         });
 
         $this->app->singleton(NamingStrategyInterface::class, function () {
-            new (config('laradom.config.naming_strategy', DefaultNamingStrategy::class))();
+            return new (config('laradom.config.naming_strategy', DefaultNamingStrategy::class))();
         });
 
         $this->app->singleton(MetadataProcessorPipeline::class, function ($app) {
