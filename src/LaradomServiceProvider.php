@@ -7,10 +7,15 @@ namespace Laradom\ORM;
 use Illuminate\Contracts\Cache\Repository as CacheRepository;
 use Illuminate\Support\ServiceProvider;
 use Laradom\ORM\Mapping\Driver\AttributeDriver;
+use Laradom\ORM\Mapping\Driver\AttributeHandler\AttributeHandler;
+use Laradom\ORM\Mapping\Driver\AttributeHandler\ColumnAttributeHandler;
+use Laradom\ORM\Mapping\Driver\AttributeHandler\GeneratedValueAttributeHandler;
+use Laradom\ORM\Mapping\Driver\AttributeHandler\IdAttributeHandler;
 use Laradom\ORM\Mapping\Driver\DriverInterface;
 use Laradom\ORM\Mapping\EntityMetadataFactory;
 use Laradom\ORM\Mapping\Naming\DefaultNamingStrategy;
 use Laradom\ORM\Mapping\Naming\NamingStrategyInterface;
+use Laradom\ORM\Mapping\Processor\FieldNameProcessor;
 use Laradom\ORM\Mapping\Processor\MetadataProcessorPipeline;
 use Laradom\ORM\Mapping\Processor\TableNameProcessor;
 
@@ -18,8 +23,24 @@ class LaradomServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        $this->app->singleton(DriverInterface::class, function () {
-            return new (config('laradom.config.metadata.driver', AttributeDriver::class))();
+        $this->app->singleton(AttributeHandler::class, function ($app) {
+            return new AttributeHandler([
+                $app->make(IdAttributeHandler::class),
+                $app->make(GeneratedValueAttributeHandler::class),
+                $app->make(ColumnAttributeHandler::class),
+            ]);
+        });
+
+        $this->app->singleton(AttributeDriver::class, function ($app) {
+            return new AttributeDriver(
+                $app->make(AttributeHandler::class),
+            );
+        });
+
+        $this->app->singleton(DriverInterface::class, function ($app) {
+            $driverClassName = config('laradom.config.metadata.driver', AttributeDriver::class);
+
+            return $app->make($driverClassName);
         });
 
         $this->app->singleton(NamingStrategyInterface::class, function () {
@@ -29,6 +50,7 @@ class LaradomServiceProvider extends ServiceProvider
         $this->app->singleton(MetadataProcessorPipeline::class, function ($app) {
             return new MetadataProcessorPipeline([
                 $app->make(TableNameProcessor::class),
+                $app->make(FieldNameProcessor::class),
             ]);
         });
 

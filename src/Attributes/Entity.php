@@ -7,7 +7,7 @@ namespace Laradom\ORM\Attributes;
 use Attribute;
 
 #[Attribute(Attribute::TARGET_CLASS)]
-class Entity
+final class Entity
 {
     public function __construct() {}
 }

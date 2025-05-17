@@ -10,5 +10,11 @@ interface NamingStrategyInterface
 
     public function propertyToColumnName(string $propertyName): string;
 
-    public function referenceColumnName(string $propertyName): string;
+    public function referenceColumnName(): string;
+
+    public function joinColumnName(string $propertyName): string;
+
+    public function joinTableName(string $sourceEntity, string $targetEntity): string;
+
+    public function joinKeyColumnName(string $entityName): string;
 }

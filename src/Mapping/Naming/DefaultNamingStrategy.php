@@ -8,6 +8,11 @@ class DefaultNamingStrategy implements NamingStrategyInterface
 {
     private string $pattern = '/(?<!^)[A-Z]/';
 
+    public function referenceColumnName(): string
+    {
+        return 'id';
+    }
+
     public function classToTableName(string $className): string
     {
         $parts = explode('\\', $className);
@@ -24,10 +29,18 @@ class DefaultNamingStrategy implements NamingStrategyInterface
         return strtolower($snake);
     }
 
-    public function referenceColumnName(string $propertyName): string
+    public function joinColumnName(string $propertyName): string
     {
-        $snake = (string) preg_replace($this->pattern, '_$0', $propertyName);
+        return strtolower($this->propertyToColumnName($propertyName) . '_' . $this->referenceColumnName());
+    }
 
-        return strtolower($snake) . '_id';
+    public function joinTableName(string $sourceEntity, string $targetEntity): string
+    {
+        return strtolower($this->classToTableName($sourceEntity) . '_' . $this->classToTableName($targetEntity));
+    }
+
+    public function joinKeyColumnName(string $entityName): string
+    {
+        return strtolower($this->classToTableName($entityName) . '_' . $this->referenceColumnName());
     }
 }
