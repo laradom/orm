@@ -7,16 +7,11 @@
     {"name": "Alexander Levchenkov", "email": "sanjia@live.ru"}
   ],
   "require": {
-    "php": "^8.1",
-    "illuminate/database": "^10.0",
-    "illuminate/support": "^10.0",
-    "illuminate/cache": "^10.0",
-    "psr/simple-cache": "^3.0"
+    "php": "^8.1"
   },
   "autoload": {
     "psr-4": {
-      "Laradom\\ORM\\": "src/",
-      "Laradom\\Example\\": "examples/"
+      "Laradom\\ORM\\": "src/"
     }
   },
   "autoload-dev": {

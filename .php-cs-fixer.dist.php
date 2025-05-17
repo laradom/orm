@@ -10,7 +10,7 @@ $finder = (new Finder())
     ->exclude([
         'vendor',
         'storage',
-        'bootstrap/cache',
+        'examples',
     ])
     ->notPath([
         'bootstrap/autoload.php',
