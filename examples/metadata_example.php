@@ -33,8 +33,8 @@ class UserExample
     #[GeneratedValue(strategy: GeneratorType::IDENTITY)]
     private int $id;
 
-    #[Column(type: Types::STRING)]
-    private int $fullName;
+    #[Column(type: Types::STRING, length: 255, nullable: true)]
+    private string $fullName;
 }
 
 $store = new ArrayStore();
