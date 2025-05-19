@@ -92,7 +92,7 @@ class FieldNameProcessorTest extends TestCase
         $field->setPropertyName($propertyName);
         $field->setType(Types::STRING);
         $field->setNullable(false);
-        $field->setIsId(false);
+        $field->setIsPrimaryKey(false);
 
         if ($columnName !== null) {
             $field->setColumnName($columnName);

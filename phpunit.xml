@@ -3,8 +3,6 @@
   <testsuites>
     <testsuite name="Laradom ORM Test Suite">
       <directory>tests</directory>
-      <exclude>tests/Integration/AbstractIntegrationTest.php</exclude>
-      <exclude>tests/Performance/AbstractPerformanceTest.php</exclude>
     </testsuite>
   </testsuites>
   <source>

@@ -3,14 +3,10 @@
 declare(strict_types=1);
 
 use Illuminate\Cache\ArrayStore;
+use Illuminate\Cache\FileStore;
 use Illuminate\Cache\Repository as CacheRepository;
-use Laradom\ORM\Attributes\Column;
-use Laradom\ORM\Attributes\Entity;
-use Laradom\ORM\Attributes\GeneratedValue;
-use Laradom\ORM\Attributes\Id;
-use Laradom\ORM\Attributes\Table;
-use Laradom\ORM\Enum\Attributes\Types;
-use Laradom\ORM\Enum\GeneratorType\GeneratorType;
+use Illuminate\Filesystem\Filesystem;
+use Laradom\Examples\Entities\UserExample;
 use Laradom\ORM\Mapping\Driver\AttributeDriver;
 use Laradom\ORM\Mapping\Driver\AttributeHandler\AttributeHandler;
 use Laradom\ORM\Mapping\Driver\AttributeHandler\ColumnAttributeHandler;
@@ -21,24 +17,17 @@ use Laradom\ORM\Mapping\Naming\DefaultNamingStrategy;
 use Laradom\ORM\Mapping\Processor\FieldNameProcessor;
 use Laradom\ORM\Mapping\Processor\MetadataProcessorPipeline;
 use Laradom\ORM\Mapping\Processor\TableNameProcessor;
+use Laradom\ORM\Scanning\FileScanner;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-#[Entity]
-#[Table('users')]
-class UserExample
-{
-    #[Id]
-    #[Column(type: Types::INTEGER)]
-    #[GeneratedValue(strategy: GeneratorType::IDENTITY)]
-    private int $id;
+$filesystem = new Filesystem();
 
-    #[Column(type: Types::STRING, length: 255, nullable: true)]
-    private string $fullName;
-}
-
-$store = new ArrayStore();
+$store = new FileStore($filesystem, '../var/cache');
+//$store = new ArrayStore();
 $cache = new CacheRepository($store);
+
+$entityScanner = new FileScanner($filesystem, [__DIR__ . '/../tests/Entities',]);
 
 $namingStrategy = new DefaultNamingStrategy();
 
@@ -59,8 +48,38 @@ $entityMetadataFactory = new EntityMetadataFactory(
     $attributeDriver,
     $cache,
     $metadataProcessor,
+    $entityScanner,
+    true,
     true
 );
 
-$entityMetadata = $entityMetadataFactory->getEntityMetadata(UserExample::class);
-dd($entityMetadata);
+$entities = $entityMetadataFactory->getAllMetadata();
+
+echo "Found entities:\n";
+foreach ($entities as $entity) {
+    echo "- {$entity->getClassName()}\n";
+}
+
+$metadata = $entityMetadataFactory->getEntityMetadata(UserExample::class);
+if ($metadata === null) {
+    echo 'Metadata not found';
+    exit(1);
+}
+
+echo "\nEntity: {$metadata->getClassName()}\n";
+echo "Table: {$metadata->getTableName()}\n";
+echo "\nFields:\n";
+
+foreach ($metadata->getFields() as $field) {
+    echo "- {$field->getPropertyName()} ({$field->getType()->value})";
+
+    if ($field->isPrimaryKey()) {
+        echo " [PK]";
+    }
+
+    if (!empty($field->getGeneratedFieldMetadata()?->isGenerated())) {
+        echo " [Generated]";
+    }
+
+    echo "\n";
+}

@@ -13,8 +13,8 @@ class FieldMetadata
     private Types $type;
     private ?int $length;
     private bool $nullable;
-    private bool $isId;
-    private GeneratedFieldMetadata $generatedFieldMetadata;
+    private bool $isPrimaryKey = false;
+    private ?GeneratedFieldMetadata $generatedFieldMetadata = null;
 
     public function getColumnName(): ?string
     {
@@ -66,22 +66,22 @@ class FieldMetadata
         $this->nullable = $nullable;
     }
 
-    public function isId(): bool
+    public function isPrimaryKey(): bool
     {
-        return $this->isId;
+        return $this->isPrimaryKey;
     }
 
-    public function setIsId(bool $isId): void
+    public function setIsPrimaryKey(bool $isPrimaryKey): void
     {
-        $this->isId = $isId;
+        $this->isPrimaryKey = $isPrimaryKey;
     }
 
-    public function generated(): GeneratedFieldMetadata
+    public function getGeneratedFieldMetadata(): ?GeneratedFieldMetadata
     {
         return $this->generatedFieldMetadata;
     }
 
-    public function setGeneratedFieldMetadata(GeneratedFieldMetadata $generatedFieldMetadata): void
+    public function setGeneratedFieldMetadata(?GeneratedFieldMetadata $generatedFieldMetadata): void
     {
         $this->generatedFieldMetadata = $generatedFieldMetadata;
     }

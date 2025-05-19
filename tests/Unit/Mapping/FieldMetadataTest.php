@@ -59,11 +59,11 @@ class FieldMetadataTest extends TestCase
 
     public function testSetAndGetIsId(): void
     {
-        $this->fieldMetadata->setIsId(true);
-        $this->assertTrue($this->fieldMetadata->isId());
+        $this->fieldMetadata->setIsPrimaryKey(true);
+        $this->assertTrue($this->fieldMetadata->isPrimaryKey());
 
-        $this->fieldMetadata->setIsId(false);
-        $this->assertFalse($this->fieldMetadata->isId());
+        $this->fieldMetadata->setIsPrimaryKey(false);
+        $this->assertFalse($this->fieldMetadata->isPrimaryKey());
     }
 
     public function testSetAndGetGeneratedFieldMetadata(): void
@@ -71,6 +71,6 @@ class FieldMetadataTest extends TestCase
         $generatedFieldMetadata = new GeneratedFieldMetadata();
         $this->fieldMetadata->setGeneratedFieldMetadata($generatedFieldMetadata);
 
-        $this->assertSame($generatedFieldMetadata, $this->fieldMetadata->generated());
+        $this->assertSame($generatedFieldMetadata, $this->fieldMetadata->getGeneratedFieldMetadata());
     }
 }

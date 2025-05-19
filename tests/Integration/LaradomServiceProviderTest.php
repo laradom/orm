@@ -12,7 +12,7 @@ use Laradom\ORM\Mapping\EntityMetadataFactory;
 use Laradom\ORM\Mapping\Naming\DefaultNamingStrategy;
 use Laradom\ORM\Mapping\Naming\NamingStrategyInterface;
 use Laradom\ORM\Mapping\Processor\MetadataProcessorPipeline;
-use Orchestra\Testbench\TestCase;
+use Laradom\Tests\TestCase;
 use ReflectionClass;
 
 class LaradomServiceProviderTest extends TestCase

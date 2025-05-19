@@ -45,11 +45,11 @@ class IdAttributeHandlerTest extends TestCase
         $reflectionClass = new ReflectionClass(TestEntityWithId::class);
         $property = $reflectionClass->getProperty('id');
         $fieldMetadata = new FieldMetadata();
-        $fieldMetadata->setIsId(false);
+        $fieldMetadata->setIsPrimaryKey(false);
 
         $this->handler->handle($property, $fieldMetadata);
 
-        $this->assertTrue($fieldMetadata->isId());
+        $this->assertTrue($fieldMetadata->isPrimaryKey());
     }
 
     public function testHandleWithoutIdAttribute(): void
@@ -57,11 +57,11 @@ class IdAttributeHandlerTest extends TestCase
         $reflectionClass = new ReflectionClass(TestEntityWithoutId::class);
         $property = $reflectionClass->getProperty('id');
         $fieldMetadata = new FieldMetadata();
-        $fieldMetadata->setIsId(false);
+        $fieldMetadata->setIsPrimaryKey(false);
 
         $this->handler->handle($property, $fieldMetadata);
 
-        $this->assertFalse($fieldMetadata->isId());
+        $this->assertFalse($fieldMetadata->isPrimaryKey());
     }
 }
 

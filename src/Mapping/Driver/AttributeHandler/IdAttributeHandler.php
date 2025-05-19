@@ -23,6 +23,6 @@ final class IdAttributeHandler extends AbstractPropertyAttributeHandler
             return;
         }
 
-        $fieldMetadata->setIsId(true);
+        $fieldMetadata->setIsPrimaryKey(true);
     }
 }

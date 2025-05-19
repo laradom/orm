@@ -11,7 +11,7 @@ use Laradom\ORM\Mapping\Naming\DefaultNamingStrategy;
 use Laradom\ORM\Mapping\Processor\FieldNameProcessor;
 use Laradom\ORM\Mapping\Processor\MetadataProcessorPipeline;
 use Laradom\ORM\Mapping\Processor\TableNameProcessor;
-use PHPUnit\Framework\TestCase;
+use Laradom\Tests\TestCase;
 
 class MetadataProcessorIntegrationTest extends TestCase
 {
@@ -129,7 +129,7 @@ class MetadataProcessorIntegrationTest extends TestCase
         $field->setPropertyName($propertyName);
         $field->setType($type);
         $field->setNullable(false);
-        $field->setIsId(false);
+        $field->setIsPrimaryKey(false);
         $field->setColumnName($columnName);
 
         return $field;

@@ -37,7 +37,7 @@ class AttributeDriverTest extends TestCase
                     $fieldMetadata->setPropertyName('id');
                     $fieldMetadata->setColumnName('id');
                     $fieldMetadata->setType(Types::INTEGER);
-                    $fieldMetadata->setIsId(true);
+                    $fieldMetadata->setIsPrimaryKey(true);
                 } elseif ($property->getName() === 'name') {
                     $fieldMetadata->setPropertyName('name');
                     $fieldMetadata->setColumnName('user_name');
@@ -57,7 +57,7 @@ class AttributeDriverTest extends TestCase
         $this->assertEquals('id', $fields[0]->getPropertyName());
         $this->assertEquals('id', $fields[0]->getColumnName());
         $this->assertEquals(Types::INTEGER, $fields[0]->getType());
-        $this->assertTrue($fields[0]->isId());
+        $this->assertTrue($fields[0]->isPrimaryKey());
 
         $this->assertEquals('name', $fields[1]->getPropertyName());
         $this->assertEquals('user_name', $fields[1]->getColumnName());
@@ -74,7 +74,7 @@ class AttributeDriverTest extends TestCase
                 $fieldMetadata->setPropertyName('id');
                 $fieldMetadata->setColumnName('id');
                 $fieldMetadata->setType(Types::INTEGER);
-                $fieldMetadata->setIsId(true);
+                $fieldMetadata->setIsPrimaryKey(true);
             });
 
         $metadata = $this->driver->extractMetadata(TestEntityWithoutTableAttribute::class);
@@ -87,7 +87,7 @@ class AttributeDriverTest extends TestCase
         $this->assertEquals('id', $fields[0]->getPropertyName());
         $this->assertEquals('id', $fields[0]->getColumnName());
         $this->assertEquals(Types::INTEGER, $fields[0]->getType());
-        $this->assertTrue($fields[0]->isId());
+        $this->assertTrue($fields[0]->isPrimaryKey());
     }
 
     public function testExtractMetadataWithNonEntityClassThrowsException(): void

@@ -29,12 +29,10 @@ class AttributeDriver implements DriverInterface
     {
         $reflectionClass = new ReflectionClass($className);
 
-        if (!$this->supports($reflectionClass)) {
-            throw new EntityNotFoundException(sprintf(
-                'The "%s" class does not have the "%s" attribute.',
-                $className,
-                Entity::class,
-            ));
+        if (!$this->supports($className)) {
+            throw new EntityNotFoundException(
+                sprintf('The "%s" class does not have the "%s" attribute.', $className, Entity::class),
+            );
         }
 
         $metadata = new EntityMetadata($className);
@@ -58,10 +56,14 @@ class AttributeDriver implements DriverInterface
     }
 
     /**
-     * @param ReflectionClass<object> $classReflection
+     * @param class-string $className
+     *
+     * @throws ReflectionException
      */
-    private function supports(ReflectionClass $classReflection): bool
+    public function supports(string $className): bool
     {
-        return !empty($classReflection->getAttributes(Entity::class));
+        $reflectionClass = new ReflectionClass($className);
+
+        return !empty($reflectionClass->getAttributes(Entity::class));
     }
 }

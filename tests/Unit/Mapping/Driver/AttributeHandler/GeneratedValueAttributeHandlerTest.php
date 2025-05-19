@@ -51,7 +51,7 @@ class GeneratedValueAttributeHandlerTest extends TestCase
 
         $this->handler->handle($property, $fieldMetadata);
 
-        $generatedFieldMetadata = $fieldMetadata->generated();
+        $generatedFieldMetadata = $fieldMetadata->getGeneratedFieldMetadata();
         $this->assertNotNull($generatedFieldMetadata);
         $this->assertTrue($generatedFieldMetadata->isGenerated());
         $this->assertEquals(GeneratorType::IDENTITY, $generatedFieldMetadata->getGeneratorType());
@@ -66,7 +66,7 @@ class GeneratedValueAttributeHandlerTest extends TestCase
 
         $this->handler->handle($property, $fieldMetadata);
 
-        $generatedFieldMetadata = $fieldMetadata->generated();
+        $generatedFieldMetadata = $fieldMetadata->getGeneratedFieldMetadata();
         $this->assertNotNull($generatedFieldMetadata);
         $this->assertTrue($generatedFieldMetadata->isGenerated());
         $this->assertEquals(GeneratorType::CUSTOM, $generatedFieldMetadata->getGeneratorType());

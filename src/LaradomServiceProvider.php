@@ -5,7 +5,10 @@ declare(strict_types=1);
 namespace Laradom\ORM;
 
 use Illuminate\Contracts\Cache\Repository as CacheRepository;
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\ServiceProvider;
+use Laradom\ORM\Console\Commands\ClearCacheCommand;
+use Laradom\ORM\Console\Commands\ScanEntitiesCommand;
 use Laradom\ORM\Mapping\Driver\AttributeDriver;
 use Laradom\ORM\Mapping\Driver\AttributeHandler\AttributeHandler;
 use Laradom\ORM\Mapping\Driver\AttributeHandler\ColumnAttributeHandler;
@@ -18,6 +21,8 @@ use Laradom\ORM\Mapping\Naming\NamingStrategyInterface;
 use Laradom\ORM\Mapping\Processor\FieldNameProcessor;
 use Laradom\ORM\Mapping\Processor\MetadataProcessorPipeline;
 use Laradom\ORM\Mapping\Processor\TableNameProcessor;
+use Laradom\ORM\Scanning\FileScanner;
+use Throwable;
 
 class LaradomServiceProvider extends ServiceProvider
 {
@@ -56,12 +61,25 @@ class LaradomServiceProvider extends ServiceProvider
 
         $this->app->singleton(EntityMetadataFactory::class, function ($app) {
             $cacheEnabled = (bool) config('laradom.config.metadata.cache', false);
+            $autoInvalidateCache = (bool) config('laradom.config.metadata.auto_invalidate_cache', true);
 
             return new EntityMetadataFactory(
                 $app->make(DriverInterface::class),
                 $app->make(CacheRepository::class),
                 $app->make(MetadataProcessorPipeline::class),
+                $app->make(FileScanner::class),
                 $cacheEnabled,
+                $autoInvalidateCache,
+            );
+        });
+
+        $this->app->singleton(FileScanner::class, function ($app) {
+            /** @var array<class-string> $entityPaths */
+            $entityPaths = (array) config('laradom.config.entity_paths', []);
+
+            return new FileScanner(
+                $app->make(Filesystem::class),
+                $entityPaths,
             );
         });
     }
@@ -73,5 +91,24 @@ class LaradomServiceProvider extends ServiceProvider
         ], 'config');
 
         $this->mergeConfigFrom(__DIR__ . '/../config/laradom.php', 'laradom');
+
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                ScanEntitiesCommand::class,
+                ClearCacheCommand::class,
+            ]);
+        }
+
+        if (config('laradom.config.metadata.eager_load_metadata', false)) {
+            $this->app->afterResolving(EntityMetadataFactory::class, function (EntityMetadataFactory $factory) {
+                try {
+                    $factory->getAllMetadata();
+                } catch (Throwable $e) {
+                    if ($this->app->hasDebugModeEnabled()) {
+                        throw $e;
+                    }
+                }
+            });
+        }
     }
 }
