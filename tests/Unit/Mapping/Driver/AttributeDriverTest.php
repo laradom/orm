@@ -11,40 +11,44 @@ use Laradom\ORM\Attributes\Table;
 use Laradom\ORM\Enum\Attributes\Types;
 use Laradom\ORM\Exception\EntityNotFoundException;
 use Laradom\ORM\Mapping\Driver\AttributeDriver;
-use Laradom\ORM\Mapping\Driver\AttributeHandler\AttributeHandler;
+use Laradom\ORM\Mapping\Driver\AttributeHandler\MetadataProcessor;
 use Laradom\ORM\Mapping\FieldMetadata;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use ReflectionProperty;
+use ReflectionClass;
 
 class AttributeDriverTest extends TestCase
 {
     private AttributeDriver $driver;
-    private AttributeHandler|MockObject $attributeHandler;
+    private MetadataProcessor|MockObject $metadataProcessor;
 
     protected function setUp(): void
     {
-        $this->attributeHandler = $this->createMock(AttributeHandler::class);
-        $this->driver = new AttributeDriver($this->attributeHandler);
+        $this->metadataProcessor = $this->createMock(MetadataProcessor::class);
+        $this->driver = new AttributeDriver($this->metadataProcessor);
     }
 
     public function testExtractMetadataWithEntityAndTableAttributes(): void
     {
-        $this->attributeHandler->expects($this->exactly(2))
-            ->method('handle')
-            ->willReturnCallback(function (ReflectionProperty $property, FieldMetadata $fieldMetadata) {
-                if ($property->getName() === 'id') {
-                    $fieldMetadata->setPropertyName('id');
-                    $fieldMetadata->setColumnName('id');
-                    $fieldMetadata->setType(Types::INTEGER);
-                    $fieldMetadata->setIsPrimaryKey(true);
-                } elseif ($property->getName() === 'name') {
-                    $fieldMetadata->setPropertyName('name');
-                    $fieldMetadata->setColumnName('user_name');
-                    $fieldMetadata->setType(Types::STRING);
-                    $fieldMetadata->setLength(255);
-                    $fieldMetadata->setNullable(false);
-                }
+        $this->metadataProcessor->expects($this->once())
+            ->method('process')
+            ->willReturnCallback(function (ReflectionClass $class, $metadata) {
+                $metadata->setTableName('custom_users');
+
+                $idField = new FieldMetadata();
+                $idField->setPropertyName('id');
+                $idField->setColumnName('id');
+                $idField->setType(Types::INTEGER);
+                $idField->setIsPrimaryKey(true);
+                $metadata->addField($idField);
+
+                $nameField = new FieldMetadata();
+                $nameField->setPropertyName('name');
+                $nameField->setColumnName('user_name');
+                $nameField->setType(Types::STRING);
+                $nameField->setLength(255);
+                $nameField->setNullable(false);
+                $metadata->addField($nameField);
             });
 
         $metadata = $this->driver->extractMetadata(TestEntityWithTableAttribute::class);
@@ -68,13 +72,15 @@ class AttributeDriverTest extends TestCase
 
     public function testExtractMetadataWithEntityWithoutTableAttribute(): void
     {
-        $this->attributeHandler->expects($this->once())
-            ->method('handle')
-            ->willReturnCallback(function (ReflectionProperty $property, FieldMetadata $fieldMetadata) {
-                $fieldMetadata->setPropertyName('id');
-                $fieldMetadata->setColumnName('id');
-                $fieldMetadata->setType(Types::INTEGER);
-                $fieldMetadata->setIsPrimaryKey(true);
+        $this->metadataProcessor->expects($this->once())
+            ->method('process')
+            ->willReturnCallback(function (ReflectionClass $class, $metadata) {
+                $idField = new FieldMetadata();
+                $idField->setPropertyName('id');
+                $idField->setColumnName('id');
+                $idField->setType(Types::INTEGER);
+                $idField->setIsPrimaryKey(true);
+                $metadata->addField($idField);
             });
 
         $metadata = $this->driver->extractMetadata(TestEntityWithoutTableAttribute::class);

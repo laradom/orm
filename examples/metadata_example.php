@@ -6,12 +6,9 @@ use Illuminate\Cache\ArrayStore;
 use Illuminate\Cache\FileStore;
 use Illuminate\Cache\Repository as CacheRepository;
 use Illuminate\Filesystem\Filesystem;
-use Laradom\Examples\Entities\UserExample;
 use Laradom\ORM\Mapping\Driver\AttributeDriver;
-use Laradom\ORM\Mapping\Driver\AttributeHandler\AttributeHandler;
-use Laradom\ORM\Mapping\Driver\AttributeHandler\ColumnAttributeHandler;
-use Laradom\ORM\Mapping\Driver\AttributeHandler\GeneratedValueAttributeHandler;
-use Laradom\ORM\Mapping\Driver\AttributeHandler\IdAttributeHandler;
+use Laradom\ORM\Mapping\Driver\AttributeHandler\MetadataProcessorFactory;
+use Laradom\ORM\Mapping\EntityMetadata;
 use Laradom\ORM\Mapping\EntityMetadataFactory;
 use Laradom\ORM\Mapping\Naming\DefaultNamingStrategy;
 use Laradom\ORM\Mapping\Processor\FieldNameProcessor;
@@ -23,63 +20,86 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 $filesystem = new Filesystem();
 
-$store = new FileStore($filesystem, '../var/cache');
-//$store = new ArrayStore();
+// $store = new FileStore($filesystem, '../var/cache');
+$store = new ArrayStore();
 $cache = new CacheRepository($store);
 
-$entityScanner = new FileScanner($filesystem, [__DIR__ . '/../tests/Entities',]);
+$entityScanner = new FileScanner($filesystem, [__DIR__ . '/Entities']);
 
 $namingStrategy = new DefaultNamingStrategy();
 
-$metadataProcessor = new MetadataProcessorPipeline([
+$metadataProcessorPipeline = new MetadataProcessorPipeline([
     new TableNameProcessor($namingStrategy),
     new FieldNameProcessor($namingStrategy),
 ]);
 
-$attributeHandler = new AttributeHandler([
-    new IdAttributeHandler(),
-    new GeneratedValueAttributeHandler(),
-    new ColumnAttributeHandler(),
-]);
+$metadataFactory = new MetadataProcessorFactory();
 
-$attributeDriver = new AttributeDriver($attributeHandler);
+$attributeDriver = new AttributeDriver($metadataFactory->create());
 
 $entityMetadataFactory = new EntityMetadataFactory(
     $attributeDriver,
     $cache,
-    $metadataProcessor,
+    $metadataProcessorPipeline,
     $entityScanner,
     true,
-    true
+    true,
 );
 
 $entities = $entityMetadataFactory->getAllMetadata();
 
-echo "Found entities:\n";
+echo 'Find entities: ' . count($entities) . "\n";
+
 foreach ($entities as $entity) {
-    echo "- {$entity->getClassName()}\n";
+    displayEntityMetadata($entity);
+    echo "\n" . str_repeat('-', 50) . "\n\n";
 }
 
-$metadata = $entityMetadataFactory->getEntityMetadata(UserExample::class);
-if ($metadata === null) {
-    echo 'Metadata not found';
-    exit(1);
-}
+function displayEntityMetadata(EntityMetadata $metadata): void
+{
+    echo "Entity: {$metadata->getClassName()}\n";
+    echo "Table: {$metadata->getTableName()}\n";
 
-echo "\nEntity: {$metadata->getClassName()}\n";
-echo "Table: {$metadata->getTableName()}\n";
-echo "\nFields:\n";
+    echo "\nFields:\n";
+    foreach ($metadata->getFields() as $field) {
+        echo "- {$field->getPropertyName()} ({$field->getType()->value})";
 
-foreach ($metadata->getFields() as $field) {
-    echo "- {$field->getPropertyName()} ({$field->getType()->value})";
+        if ($field->isPrimaryKey()) {
+            echo ' [PK]';
+        }
 
-    if ($field->isPrimaryKey()) {
-        echo " [PK]";
+        if (!empty($field->getGeneratedFieldMetadata()?->isGenerated())) {
+            echo ' [Generated]';
+        }
+
+        echo "\n";
     }
 
-    if (!empty($field->getGeneratedFieldMetadata()?->isGenerated())) {
-        echo " [Generated]";
-    }
+    if (count($metadata->getRelations()) > 0) {
+        echo "\nRelations:\n";
+        foreach ($metadata->getRelations() as $relation) {
+            echo "- {$relation->getFieldName()} ({$relation->getType()->value})";
+            echo " -> {$relation->getTargetEntity()}";
 
-    echo "\n";
+            if ($relation->getMappedBy() !== null) {
+                echo " (mappedBy: {$relation->getMappedBy()})";
+            }
+
+            if ($relation->getInversedBy() !== null) {
+                echo " (inversedBy: {$relation->getInversedBy()})";
+            }
+
+            if ($relation->isCascadePersist()) {
+                echo ' [CASCADE PERSIST]';
+            }
+
+            if ($relation->isOrphanRemoval()) {
+                echo ' [ORPHAN REMOVAL]';
+            }
+
+            echo "\n";
+        }
+    } else {
+        echo "\nRelations: none\n";
+    }
 }

@@ -10,10 +10,8 @@ use Illuminate\Support\ServiceProvider;
 use Laradom\ORM\Console\Commands\ClearCacheCommand;
 use Laradom\ORM\Console\Commands\ScanEntitiesCommand;
 use Laradom\ORM\Mapping\Driver\AttributeDriver;
-use Laradom\ORM\Mapping\Driver\AttributeHandler\AttributeHandler;
-use Laradom\ORM\Mapping\Driver\AttributeHandler\ColumnAttributeHandler;
-use Laradom\ORM\Mapping\Driver\AttributeHandler\GeneratedValueAttributeHandler;
-use Laradom\ORM\Mapping\Driver\AttributeHandler\IdAttributeHandler;
+use Laradom\ORM\Mapping\Driver\AttributeHandler\MetadataProcessor;
+use Laradom\ORM\Mapping\Driver\AttributeHandler\MetadataProcessorFactory;
 use Laradom\ORM\Mapping\Driver\DriverInterface;
 use Laradom\ORM\Mapping\EntityMetadataFactory;
 use Laradom\ORM\Mapping\Naming\DefaultNamingStrategy;
@@ -28,17 +26,17 @@ class LaradomServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        $this->app->singleton(AttributeHandler::class, function ($app) {
-            return new AttributeHandler([
-                $app->make(IdAttributeHandler::class),
-                $app->make(GeneratedValueAttributeHandler::class),
-                $app->make(ColumnAttributeHandler::class),
-            ]);
+        $this->app->singleton(MetadataProcessorFactory::class, function () {
+            return new MetadataProcessorFactory();
+        });
+
+        $this->app->singleton(MetadataProcessor::class, function ($app) {
+            return $app->make(MetadataProcessorFactory::class)->create();
         });
 
         $this->app->singleton(AttributeDriver::class, function ($app) {
             return new AttributeDriver(
-                $app->make(AttributeHandler::class),
+                $app->make(MetadataProcessor::class),
             );
         });
 

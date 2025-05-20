@@ -11,7 +11,7 @@ use Laradom\ORM\Mapping\FieldMetadata;
 use Laradom\ORM\Mapping\GeneratedFieldMetadata;
 use ReflectionProperty;
 
-final class GeneratedValueAttributeHandler extends AbstractPropertyAttributeHandler
+final class GeneratedValueAttributeHandler extends AbstractAttributeHandler implements FieldHandlerInterface
 {
     public function getAttributeClass(): string
     {
@@ -25,18 +25,18 @@ final class GeneratedValueAttributeHandler extends AbstractPropertyAttributeHand
         }
 
         /**
-         * @var GeneratedValue|null $columnAttribute
+         * @var GeneratedValue|null $attribute
          */
-        $columnAttribute = $this->getPropertyAttribute($property);
+        $attribute = $this->getPropertyAttribute($property);
 
-        if ($columnAttribute === null) {
+        if ($attribute === null) {
             return;
         }
 
         $generatedFieldMetadata = new GeneratedFieldMetadata();
         $generatedFieldMetadata->setIsGenerated(true);
-        $generatedFieldMetadata->setGeneratorType($columnAttribute->strategy);
-        $generatedFieldMetadata->setGeneratedCustomClass($columnAttribute->customClass);
+        $generatedFieldMetadata->setGeneratorType($attribute->strategy);
+        $generatedFieldMetadata->setGeneratedCustomClass($attribute->customClass);
 
         $fieldMetadata->setGeneratedFieldMetadata($generatedFieldMetadata);
     }

@@ -8,7 +8,7 @@ use Laradom\ORM\Attributes\Id;
 use Laradom\ORM\Mapping\FieldMetadata;
 use ReflectionProperty;
 
-final class IdAttributeHandler extends AbstractPropertyAttributeHandler
+final class IdAttributeHandler extends AbstractAttributeHandler implements FieldHandlerInterface
 {
     public function getAttributeClass(): string
     {
@@ -17,9 +17,12 @@ final class IdAttributeHandler extends AbstractPropertyAttributeHandler
 
     public function handle(ReflectionProperty $property, FieldMetadata $fieldMetadata): void
     {
-        $columnAttribute = $this->getPropertyAttribute($property);
+        /**
+         * @var Id|null $attribute
+         */
+        $attribute = $this->getPropertyAttribute($property);
 
-        if ($columnAttribute === null) {
+        if ($attribute === null) {
             return;
         }
 

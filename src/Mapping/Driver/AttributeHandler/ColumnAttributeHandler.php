@@ -8,7 +8,7 @@ use Laradom\ORM\Attributes\Column;
 use Laradom\ORM\Mapping\FieldMetadata;
 use ReflectionProperty;
 
-final class ColumnAttributeHandler extends AbstractPropertyAttributeHandler
+final class ColumnAttributeHandler extends AbstractAttributeHandler implements FieldHandlerInterface
 {
     public function getAttributeClass(): string
     {
@@ -18,20 +18,20 @@ final class ColumnAttributeHandler extends AbstractPropertyAttributeHandler
     public function handle(ReflectionProperty $property, FieldMetadata $fieldMetadata): void
     {
         /**
-         * @var Column|null $columnAttribute
+         * @var Column|null $attribute
          */
-        $columnAttribute = $this->getPropertyAttribute($property);
+        $attribute = $this->getPropertyAttribute($property);
 
-        if ($columnAttribute === null) {
+        if ($attribute === null) {
             return;
         }
 
         $propertyName = $property->getName();
 
         $fieldMetadata->setPropertyName($propertyName);
-        $fieldMetadata->setColumnName($columnAttribute->name);
-        $fieldMetadata->setType($columnAttribute->type);
-        $fieldMetadata->setLength($columnAttribute->length);
-        $fieldMetadata->setNullable($columnAttribute->nullable);
+        $fieldMetadata->setColumnName($attribute->name);
+        $fieldMetadata->setType($attribute->type);
+        $fieldMetadata->setLength($attribute->length);
+        $fieldMetadata->setNullable($attribute->nullable);
     }
 }

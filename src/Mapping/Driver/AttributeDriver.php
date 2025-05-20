@@ -5,18 +5,16 @@ declare(strict_types=1);
 namespace Laradom\ORM\Mapping\Driver;
 
 use Laradom\ORM\Attributes\Entity;
-use Laradom\ORM\Attributes\Table;
 use Laradom\ORM\Exception\EntityNotFoundException;
-use Laradom\ORM\Mapping\Driver\AttributeHandler\AttributeHandler;
+use Laradom\ORM\Mapping\Driver\AttributeHandler\MetadataProcessor;
 use Laradom\ORM\Mapping\EntityMetadata;
-use Laradom\ORM\Mapping\FieldMetadata;
 use ReflectionClass;
 use ReflectionException;
 
 class AttributeDriver implements DriverInterface
 {
     public function __construct(
-        private readonly AttributeHandler $attributeHandler,
+        private readonly MetadataProcessor $metadataProcessor,
     ) {}
 
     /**
@@ -37,20 +35,7 @@ class AttributeDriver implements DriverInterface
 
         $metadata = new EntityMetadata($className);
 
-        $tableAttributes = $reflectionClass->getAttributes(Table::class);
-
-        if (!empty($tableAttributes)) {
-            $tableAttribute = $tableAttributes[0]->newInstance();
-            $metadata->setTableName($tableAttribute->name);
-        }
-
-        foreach ($reflectionClass->getProperties() as $property) {
-            $fieldMetadata = new FieldMetadata();
-
-            $this->attributeHandler->handle($property, $fieldMetadata);
-
-            $metadata->addField($fieldMetadata);
-        }
+        $this->metadataProcessor->process($reflectionClass, $metadata);
 
         return $metadata;
     }

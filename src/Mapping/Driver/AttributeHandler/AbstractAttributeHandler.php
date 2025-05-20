@@ -6,7 +6,7 @@ namespace Laradom\ORM\Mapping\Driver\AttributeHandler;
 
 use ReflectionProperty;
 
-abstract class AbstractPropertyAttributeHandler implements AttributeHandlerInterface
+abstract class AbstractAttributeHandler implements AttributeHandlerInterface
 {
     public function support(ReflectionProperty $property): bool
     {
