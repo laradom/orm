@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Laradom\ORM\Mapping;
 
 use Laradom\ORM\Enum\Attributes\RelationTypes;
+use Laradom\ORM\Enum\FetchStrategyMetadata;
 
 class RelationMetadata
 {
@@ -13,8 +14,17 @@ class RelationMetadata
     private string $targetEntity;
     private ?string $mappedBy = null;
     private ?string $inversedBy = null;
-    private bool $cascadePersist = false;
+    private CascadeTypeMetadata $cascade;
     private bool $orphanRemoval = false;
+    /** @var JoinColumnMetadata[]|null */
+    private ?array $joinColumns = null;
+    private ?JoinTableMetadata $joinTable = null;
+    private FetchStrategyMetadata $fetchStrategy = FetchStrategyMetadata::LAZY;
+
+    public function __construct()
+    {
+        $this->cascade = new CascadeTypeMetadata();
+    }
 
     public function getType(): RelationTypes
     {
@@ -66,14 +76,24 @@ class RelationMetadata
         $this->inversedBy = $inversedBy;
     }
 
+    public function getCascade(): CascadeTypeMetadata
+    {
+        return $this->cascade;
+    }
+
+    public function setCascade(CascadeTypeMetadata $cascade): void
+    {
+        $this->cascade = $cascade;
+    }
+
     public function isCascadePersist(): bool
     {
-        return $this->cascadePersist;
+        return $this->cascade->isPersist();
     }
 
     public function setCascadePersist(bool $cascadePersist): void
     {
-        $this->cascadePersist = $cascadePersist;
+        $this->cascade->setPersist($cascadePersist);
     }
 
     public function isOrphanRemoval(): bool
@@ -84,5 +104,52 @@ class RelationMetadata
     public function setOrphanRemoval(bool $orphanRemoval): void
     {
         $this->orphanRemoval = $orphanRemoval;
+    }
+
+    /**
+     * @return JoinColumnMetadata[]|null
+     */
+    public function getJoinColumns(): ?array
+    {
+        return $this->joinColumns;
+    }
+
+    public function addJoinColumn(JoinColumnMetadata $joinColumn): void
+    {
+        if ($this->joinColumns === null) {
+            $this->joinColumns = [];
+        }
+
+        $this->joinColumns[] = $joinColumn;
+    }
+
+    public function setJoinColumns(?array $joinColumns): void
+    {
+        $this->joinColumns = $joinColumns;
+    }
+
+    public function getJoinTable(): ?JoinTableMetadata
+    {
+        return $this->joinTable;
+    }
+
+    public function setJoinTable(?JoinTableMetadata $joinTable): void
+    {
+        $this->joinTable = $joinTable;
+    }
+
+    public function getFetchStrategy(): FetchStrategyMetadata
+    {
+        return $this->fetchStrategy;
+    }
+
+    public function setFetchStrategy(FetchStrategyMetadata $fetchStrategy): void
+    {
+        $this->fetchStrategy = $fetchStrategy;
+    }
+
+    public function isEager(): bool
+    {
+        return $this->fetchStrategy === FetchStrategyMetadata::EAGER;
     }
 }

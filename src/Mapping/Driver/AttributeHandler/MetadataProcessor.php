@@ -4,10 +4,14 @@ declare(strict_types=1);
 
 namespace Laradom\ORM\Mapping\Driver\AttributeHandler;
 
+use Laradom\ORM\Attributes\Index;
 use Laradom\ORM\Attributes\Table;
+use Laradom\ORM\Attributes\UniqueConstraint;
 use Laradom\ORM\Mapping\EntityMetadata;
 use Laradom\ORM\Mapping\FieldMetadata;
+use Laradom\ORM\Mapping\IndexMetadata;
 use Laradom\ORM\Mapping\RelationMetadata;
+use Laradom\ORM\Mapping\UniqueConstraintMetadata;
 use ReflectionClass;
 use ReflectionProperty;
 
@@ -45,6 +49,34 @@ class MetadataProcessor
         if (!empty($tableAttributes)) {
             $tableAttribute = $tableAttributes[0]->newInstance();
             $metadata->setTableName($tableAttribute->name);
+        }
+
+        $indexAttributes = $class->getAttributes(Index::class);
+        foreach ($indexAttributes as $attribute) {
+            $indexAttribute = $attribute->newInstance();
+            $indexMetadata = new IndexMetadata(
+                $indexAttribute->name,
+                $indexAttribute->columns,
+                $indexAttribute->unique,
+            );
+            $metadata->addIndex($indexMetadata);
+        }
+
+        $constraintAttributes = $class->getAttributes(UniqueConstraint::class);
+        foreach ($constraintAttributes as $attribute) {
+            $constraintAttribute = $attribute->newInstance();
+            $name = $constraintAttribute->name;
+
+            if ($name === null) {
+                $tableName = $metadata->getTableName() ?? $class->getShortName();
+                $name = sprintf('uniq_%s_%s', strtolower($tableName), implode('_', $constraintAttribute->columns));
+            }
+
+            $constraintMetadata = new UniqueConstraintMetadata(
+                $name,
+                $constraintAttribute->columns,
+            );
+            $metadata->addUniqueConstraint($constraintMetadata);
         }
     }
 

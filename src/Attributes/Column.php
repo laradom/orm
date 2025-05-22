@@ -12,8 +12,13 @@ final class Column
 {
     public function __construct(
         public readonly ?string $name = null,
-        public readonly Types $type = Types::STRING,
+        public readonly ?Types $type = null,
         public readonly ?int $length = null,
         public readonly bool $nullable = false,
+        public readonly bool $unique = false,
+        public readonly ?int $precision = null,
+        public readonly ?int $scale = null,
+        public readonly ?string $columnDefinition = null,
+        public readonly mixed $default = null,
     ) {}
 }

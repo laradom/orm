@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Laradom\ORM\Enum\GeneratorType;
+namespace Laradom\ORM\Enum\Attributes;
 
 enum GeneratorType: string
 {

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Laradom\ORM\Attributes;
 
 use Attribute;
-use Laradom\ORM\Enum\GeneratorType\GeneratorType;
+use Laradom\ORM\Enum\Attributes\GeneratorType;
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
 class GeneratedValue

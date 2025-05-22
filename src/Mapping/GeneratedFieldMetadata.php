@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Laradom\ORM\Mapping;
 
-use Laradom\ORM\Enum\GeneratorType\GeneratorType;
+use Laradom\ORM\Enum\Attributes\GeneratorType;
 
 class GeneratedFieldMetadata
 {

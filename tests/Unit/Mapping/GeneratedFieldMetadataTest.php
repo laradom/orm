@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Laradom\Tests\Unit\Mapping;
 
-use Laradom\ORM\Enum\GeneratorType\GeneratorType;
+use Laradom\ORM\Enum\Attributes\GeneratorType;
 use Laradom\ORM\Mapping\GeneratedFieldMetadata;
 use PHPUnit\Framework\TestCase;
 

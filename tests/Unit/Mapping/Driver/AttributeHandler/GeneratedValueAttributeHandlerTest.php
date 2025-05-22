@@ -6,7 +6,7 @@ namespace Laradom\Tests\Unit\Mapping\Driver\AttributeHandler;
 
 use Laradom\ORM\Attributes\GeneratedValue;
 use Laradom\ORM\Attributes\Id;
-use Laradom\ORM\Enum\GeneratorType\GeneratorType;
+use Laradom\ORM\Enum\Attributes\GeneratorType;
 use Laradom\ORM\Exception\InvalidArgumentException;
 use Laradom\ORM\Mapping\Driver\AttributeHandler\GeneratedValueAttributeHandler;
 use Laradom\ORM\Mapping\FieldMetadata;

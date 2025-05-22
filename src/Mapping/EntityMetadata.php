@@ -13,6 +13,11 @@ class EntityMetadata
         private array $fields = [],
         /** @var RelationMetadata[] */
         private array $relations = [],
+        private ?FieldMetadata $primaryKey = null,
+        /** @var IndexMetadata[] */
+        private array $indexes = [],
+        /** @var UniqueConstraintMetadata[] */
+        private array $uniqueConstraints = [],
     ) {}
 
     public function getClassName(): string
@@ -46,6 +51,37 @@ class EntityMetadata
     public function addField(FieldMetadata $field): void
     {
         $this->fields[] = $field;
+
+        if ($field->isPrimaryKey()) {
+            $this->primaryKey = $field;
+        }
+    }
+
+    public function getFieldByPropertyName(string $propertyName): ?FieldMetadata
+    {
+        foreach ($this->fields as $field) {
+            if ($field->getPropertyName() === $propertyName) {
+                return $field;
+            }
+        }
+
+        return null;
+    }
+
+    public function getFieldByColumnName(string $columnName): ?FieldMetadata
+    {
+        foreach ($this->fields as $field) {
+            if ($field->getColumnName() === $columnName) {
+                return $field;
+            }
+        }
+
+        return null;
+    }
+
+    public function getPrimaryKey(): ?FieldMetadata
+    {
+        return $this->primaryKey;
     }
 
     /**
@@ -59,5 +95,77 @@ class EntityMetadata
     public function addRelation(RelationMetadata $relation): void
     {
         $this->relations[] = $relation;
+    }
+
+    public function getRelationByFieldName(string $fieldName): ?RelationMetadata
+    {
+        foreach ($this->relations as $relation) {
+            if ($relation->getFieldName() === $fieldName) {
+                return $relation;
+            }
+        }
+
+        return null;
+    }
+
+    public function getRelationsByTargetEntity(string $targetEntity): array
+    {
+        $relations = [];
+
+        foreach ($this->relations as $relation) {
+            if ($relation->getTargetEntity() === $targetEntity) {
+                $relations[] = $relation;
+            }
+        }
+
+        return $relations;
+    }
+
+    /**
+     * @return IndexMetadata[]
+     */
+    public function getIndexes(): array
+    {
+        return $this->indexes;
+    }
+
+    public function addIndex(IndexMetadata $index): void
+    {
+        $this->indexes[] = $index;
+    }
+
+    public function getIndexByName(string $name): ?IndexMetadata
+    {
+        foreach ($this->indexes as $index) {
+            if ($index->getName() === $name) {
+                return $index;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @return UniqueConstraintMetadata[]
+     */
+    public function getUniqueConstraints(): array
+    {
+        return $this->uniqueConstraints;
+    }
+
+    public function addUniqueConstraint(UniqueConstraintMetadata $constraint): void
+    {
+        $this->uniqueConstraints[] = $constraint;
+    }
+
+    public function getUniqueConstraintByName(string $name): ?UniqueConstraintMetadata
+    {
+        foreach ($this->uniqueConstraints as $constraint) {
+            if ($constraint->getName() === $name) {
+                return $constraint;
+            }
+        }
+
+        return null;
     }
 }

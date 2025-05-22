@@ -118,22 +118,21 @@ class EntityMetadataFactory
     private function buildAllMetadata(): array
     {
         $files = $this->fileScanner->scan();
-
         $metadataMap = [];
+
         foreach ($files as $file) {
-            try {
-                $metadata = $this->buildMetadata($file->getClassName());
+            $className = $file->getClassName();
 
-                if ($metadata === null) {
-                    continue;
+            if (class_exists($className) && $this->driver->supports($className)) {
+                $metadata = $this->buildMetadata($className);
+
+                if ($metadata !== null) {
+                    $metadataMap[$className] = $metadata;
                 }
-
-                $metadataMap[$file->getClassName()] = $metadata;
-            } catch (Throwable) {
             }
         }
 
-        return $metadataMap;
+        return $this->metadataProcessor->postProcess($metadataMap);
     }
 
     private function shouldInvalidateCache(): bool

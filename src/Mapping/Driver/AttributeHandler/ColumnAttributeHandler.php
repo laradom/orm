@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Laradom\ORM\Mapping\Driver\AttributeHandler;
 
 use Laradom\ORM\Attributes\Column;
+use Laradom\ORM\Enum\Attributes\Types;
 use Laradom\ORM\Mapping\FieldMetadata;
 use ReflectionProperty;
 
@@ -26,12 +27,27 @@ final class ColumnAttributeHandler extends AbstractAttributeHandler implements F
             return;
         }
 
+        $propertyType = $property->getType();
+
         $propertyName = $property->getName();
+
+        $namedType = $propertyType ? Types::from(mb_strtolower($propertyType->getName())) : Types::STRING;
+        $attributeType = $attribute->type ?: $namedType;
 
         $fieldMetadata->setPropertyName($propertyName);
         $fieldMetadata->setColumnName($attribute->name);
-        $fieldMetadata->setType($attribute->type);
-        $fieldMetadata->setLength($attribute->length);
-        $fieldMetadata->setNullable($attribute->nullable);
+        $fieldMetadata->setType($attributeType);
+
+        $options = $fieldMetadata->getOptions();
+        $options->setLength($attribute->length);
+        $options->setUnique($attribute->unique);
+        $options->setPrecision($attribute->precision);
+        $options->setScale($attribute->scale);
+        $options->setNullable($attribute->nullable || $propertyType->allowsNull());
+        $options->setColumnDefinition($attribute->columnDefinition);
+
+        if ($attribute->default !== null) {
+            $fieldMetadata->setDefaultValue($attribute->default);
+        }
     }
 }

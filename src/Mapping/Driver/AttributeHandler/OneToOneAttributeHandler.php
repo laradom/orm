@@ -6,6 +6,7 @@ namespace Laradom\ORM\Mapping\Driver\AttributeHandler;
 
 use Laradom\ORM\Attributes\OneToOne;
 use Laradom\ORM\Enum\Attributes\RelationTypes;
+use Laradom\ORM\Mapping\CascadeTypeMetadata;
 use Laradom\ORM\Mapping\RelationMetadata;
 use ReflectionProperty;
 
@@ -28,6 +29,7 @@ class OneToOneAttributeHandler extends AbstractAttributeHandler implements Relat
         $relationMetadata->setType(RelationTypes::OneToOne);
         $relationMetadata->setFieldName($property->getName());
         $relationMetadata->setTargetEntity($attribute->targetEntity);
+        $relationMetadata->setOrphanRemoval($attribute->orphanRemoval);
 
         if ($attribute->mappedBy !== null) {
             $relationMetadata->setMappedBy($attribute->mappedBy);
@@ -37,7 +39,8 @@ class OneToOneAttributeHandler extends AbstractAttributeHandler implements Relat
             $relationMetadata->setInversedBy($attribute->inversedBy);
         }
 
-        $relationMetadata->setCascadePersist($attribute->cascadePersist);
-        $relationMetadata->setOrphanRemoval($attribute->orphanRemoval);
+        $relationMetadata->setCascade(new CascadeTypeMetadata($attribute->cascade));
+
+        $relationMetadata->setFetchStrategy($attribute->fetch);
     }
 }

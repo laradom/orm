@@ -40,6 +40,8 @@ class MetadataProcessorFactory
             new OneToManyAttributeHandler(),
             new ManyToOneAttributeHandler(),
             new ManyToManyAttributeHandler(),
+            new JoinColumnAttributeHandler(),
+            new JoinTableAttributeHandler(),
         ];
     }
 }

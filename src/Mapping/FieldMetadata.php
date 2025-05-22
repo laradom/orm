@@ -11,10 +11,16 @@ class FieldMetadata
     private string $propertyName;
     private ?string $columnName;
     private Types $type;
-    private ?int $length;
-    private bool $nullable;
     private bool $isPrimaryKey = false;
     private ?GeneratedFieldMetadata $generatedFieldMetadata = null;
+    private mixed $defaultValue = null;
+    private bool $hasDefaultValue = false;
+    private ColumnOptionsMetadata $options;
+
+    public function __construct()
+    {
+        $this->options = new ColumnOptionsMetadata();
+    }
 
     public function getColumnName(): ?string
     {
@@ -46,24 +52,64 @@ class FieldMetadata
         $this->type = $type;
     }
 
+    public function getOptions(): ColumnOptionsMetadata
+    {
+        return $this->options;
+    }
+
+    public function setOptions(ColumnOptionsMetadata $options): void
+    {
+        $this->options = $options;
+    }
+
     public function getLength(): ?int
     {
-        return $this->length;
+        return $this->options->getLength();
     }
 
     public function setLength(?int $length): void
     {
-        $this->length = $length;
+        $this->options->setLength($length);
     }
 
     public function isNullable(): bool
     {
-        return $this->nullable;
+        return $this->options->isNullable();
     }
 
     public function setNullable(bool $nullable): void
     {
-        $this->nullable = $nullable;
+        $this->options->setNullable($nullable);
+    }
+
+    public function isUnique(): bool
+    {
+        return $this->options->isUnique();
+    }
+
+    public function setUnique(bool $unique): void
+    {
+        $this->options->setUnique($unique);
+    }
+
+    public function getPrecision(): ?int
+    {
+        return $this->options->getPrecision();
+    }
+
+    public function setPrecision(?int $precision): void
+    {
+        $this->options->setPrecision($precision);
+    }
+
+    public function getScale(): ?int
+    {
+        return $this->options->getScale();
+    }
+
+    public function setScale(?int $scale): void
+    {
+        $this->options->setScale($scale);
     }
 
     public function isPrimaryKey(): bool
@@ -84,5 +130,21 @@ class FieldMetadata
     public function setGeneratedFieldMetadata(?GeneratedFieldMetadata $generatedFieldMetadata): void
     {
         $this->generatedFieldMetadata = $generatedFieldMetadata;
+    }
+
+    public function getDefaultValue(): mixed
+    {
+        return $this->defaultValue;
+    }
+
+    public function setDefaultValue(mixed $defaultValue): void
+    {
+        $this->defaultValue = $defaultValue;
+        $this->hasDefaultValue = true;
+    }
+
+    public function hasDefaultValue(): bool
+    {
+        return $this->hasDefaultValue;
     }
 }

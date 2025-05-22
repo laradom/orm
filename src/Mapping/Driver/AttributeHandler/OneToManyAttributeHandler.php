@@ -6,6 +6,7 @@ namespace Laradom\ORM\Mapping\Driver\AttributeHandler;
 
 use Laradom\ORM\Attributes\OneToMany;
 use Laradom\ORM\Enum\Attributes\RelationTypes;
+use Laradom\ORM\Mapping\CascadeTypeMetadata;
 use Laradom\ORM\Mapping\RelationMetadata;
 use ReflectionProperty;
 
@@ -28,9 +29,11 @@ class OneToManyAttributeHandler extends AbstractAttributeHandler implements Rela
         $relationMetadata->setType(RelationTypes::OneToMany);
         $relationMetadata->setFieldName($property->getName());
         $relationMetadata->setTargetEntity($attribute->targetEntity);
-
         $relationMetadata->setMappedBy($attribute->mappedBy);
-        $relationMetadata->setCascadePersist($attribute->cascadePersist);
         $relationMetadata->setOrphanRemoval($attribute->orphanRemoval);
+
+        $relationMetadata->setCascade(new CascadeTypeMetadata($attribute->cascade));
+
+        $relationMetadata->setFetchStrategy($attribute->fetch);
     }
 }
