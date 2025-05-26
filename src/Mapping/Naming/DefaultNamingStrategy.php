@@ -43,4 +43,13 @@ class DefaultNamingStrategy implements NamingStrategyInterface
     {
         return strtolower($this->classToTableName($entityName) . '_' . $this->referenceColumnName());
     }
+
+    public function getShortClassName(string $className): string
+    {
+        if (($pos = strrpos($className, '\\')) !== false) {
+            return substr($className, $pos + 1);
+        }
+
+        return $className;
+    }
 }

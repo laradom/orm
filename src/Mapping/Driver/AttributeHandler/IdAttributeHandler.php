@@ -27,5 +27,6 @@ final class IdAttributeHandler extends AbstractAttributeHandler implements Field
         }
 
         $fieldMetadata->setIsPrimaryKey(true);
+        $fieldMetadata->setUnique(true);
     }
 }

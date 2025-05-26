@@ -14,10 +14,6 @@ use Laradom\ORM\Mapping\Naming\NamingStrategyInterface;
 
 class PrimaryKeyProcessor implements MetadataProcessorInterface
 {
-    public function __construct(
-        private readonly NamingStrategyInterface $namingStrategy,
-    ) {}
-
     public function process(EntityMetadata $entityMetadata): EntityMetadata
     {
         if ($entityMetadata->getPrimaryKey() === null) {

@@ -20,8 +20,8 @@ class JoinTableProcessor implements MetadataProcessorInterface
     {
         foreach ($entityMetadata->getRelations() as $relation) {
             if ($relation->getType() === RelationTypes::ManyToMany && $relation->getJoinTable() === null) {
-                $sourceEntityName = $this->getShortClassName($entityMetadata->getClassName());
-                $targetEntityName = $this->getShortClassName($relation->getTargetEntity());
+                $sourceEntityName = $this->namingStrategy->getShortClassName($entityMetadata->getClassName());
+                $targetEntityName = $this->namingStrategy->getShortClassName($relation->getTargetEntity());
 
                 $tableName = $this->namingStrategy->joinTableName(
                     lcfirst($sourceEntityName),
@@ -51,14 +51,5 @@ class JoinTableProcessor implements MetadataProcessorInterface
         }
 
         return $entityMetadata;
-    }
-
-    private function getShortClassName(string $fullyQualifiedClassName): string
-    {
-        if (($pos = strrpos($fullyQualifiedClassName, '\\')) !== false) {
-            return substr($fullyQualifiedClassName, $pos + 1);
-        }
-
-        return $fullyQualifiedClassName;
     }
 }

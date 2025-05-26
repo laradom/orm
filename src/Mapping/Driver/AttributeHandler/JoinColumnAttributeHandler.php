@@ -16,13 +16,6 @@ class JoinColumnAttributeHandler extends AbstractAttributeHandler implements Rel
         return JoinColumn::class;
     }
 
-    public function support(ReflectionProperty $property): bool
-    {
-        $attributes = $property->getAttributes(JoinColumn::class);
-
-        return count($attributes) > 0;
-    }
-
     public function handle(ReflectionProperty $property, RelationMetadata $relationMetadata): void
     {
         $attributes = $property->getAttributes(JoinColumn::class);

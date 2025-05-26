@@ -18,8 +18,8 @@ class PostExample
 {
     #[Id]
     #[GeneratedValue]
-    #[Column(nullable: false)]
-    private ?int $id;
+    #[Column(type: Types::INTEGER)]
+    private int $id;
 
     #[Column(type: Types::STRING, length: 255)]
     private string $title;

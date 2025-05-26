@@ -10,10 +10,6 @@ use Laradom\ORM\Mapping\Naming\NamingStrategyInterface;
 
 class ColumnTypeProcessor implements MetadataProcessorInterface
 {
-    public function __construct(
-        private readonly NamingStrategyInterface $namingStrategy,
-    ) {}
-
     public function process(EntityMetadata $entityMetadata): EntityMetadata
     {
         foreach ($entityMetadata->getFields() as $field) {

@@ -22,7 +22,7 @@ class JoinColumnProcessor implements MetadataProcessorInterface
                 ($relation->getType() === RelationTypes::ManyToOne || $relation->getType() === RelationTypes::OneToOne)
                 && ($relation->getJoinColumns() === null || count($relation->getJoinColumns()) === 0)
             ) {
-                $targetEntityShortName = $this->getShortClassName($relation->getTargetEntity());
+                $targetEntityShortName = $this->namingStrategy->getShortClassName($relation->getTargetEntity());
                 $columnName = $this->namingStrategy->joinColumnName(lcfirst($targetEntityShortName));
 
                 $joinColumn = new JoinColumnMetadata(
@@ -37,14 +37,5 @@ class JoinColumnProcessor implements MetadataProcessorInterface
         }
 
         return $entityMetadata;
-    }
-
-    private function getShortClassName(string $fullyQualifiedClassName): string
-    {
-        if (($pos = strrpos($fullyQualifiedClassName, '\\')) !== false) {
-            return substr($fullyQualifiedClassName, $pos + 1);
-        }
-
-        return $fullyQualifiedClassName;
     }
 }

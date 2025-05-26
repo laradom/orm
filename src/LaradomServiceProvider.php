@@ -78,6 +78,7 @@ class LaradomServiceProvider extends ServiceProvider
             return new FileScanner(
                 $app->make(Filesystem::class),
                 $entityPaths,
+                $app->make('log'),
             );
         });
     }

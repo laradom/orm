@@ -17,4 +17,6 @@ interface NamingStrategyInterface
     public function joinTableName(string $sourceEntity, string $targetEntity): string;
 
     public function joinKeyColumnName(string $entityName): string;
+
+    public function getShortClassName(string $className): string;
 }

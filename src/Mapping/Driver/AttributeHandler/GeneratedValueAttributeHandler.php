@@ -6,6 +6,7 @@ namespace Laradom\ORM\Mapping\Driver\AttributeHandler;
 
 use Laradom\ORM\Attributes\GeneratedValue;
 use Laradom\ORM\Attributes\Id;
+use Laradom\ORM\Enum\Attributes\GeneratorType;
 use Laradom\ORM\Exception\InvalidArgumentException;
 use Laradom\ORM\Mapping\FieldMetadata;
 use Laradom\ORM\Mapping\GeneratedFieldMetadata;
@@ -36,7 +37,10 @@ final class GeneratedValueAttributeHandler extends AbstractAttributeHandler impl
         $generatedFieldMetadata = new GeneratedFieldMetadata();
         $generatedFieldMetadata->setIsGenerated(true);
         $generatedFieldMetadata->setGeneratorType($attribute->strategy);
-        $generatedFieldMetadata->setGeneratedCustomClass($attribute->customClass);
+
+        if ($attribute->strategy === GeneratorType::CUSTOM && $attribute->customClass !== null) {
+            $generatedFieldMetadata->setGeneratedCustomClass($attribute->customClass);
+        }
 
         $fieldMetadata->setGeneratedFieldMetadata($generatedFieldMetadata);
     }

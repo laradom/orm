@@ -39,10 +39,10 @@ $attributeDriver = new AttributeDriver($metadataFactory->create());
 $metadataProcessorPipeline = new MetadataProcessorPipeline([
     new TableNameProcessor($namingStrategy),
     new FieldNameProcessor($namingStrategy),
-    new IndexNameProcessor($namingStrategy),
-    new UniqueConstraintNameProcessor($namingStrategy),
-    new PrimaryKeyProcessor($namingStrategy),
-    new ColumnTypeProcessor($namingStrategy),
+    new IndexNameProcessor(),
+    new UniqueConstraintNameProcessor(),
+    new PrimaryKeyProcessor(),
+    new ColumnTypeProcessor(),
     new JoinColumnProcessor($namingStrategy),
     new JoinTableProcessor($namingStrategy),
 ], [
