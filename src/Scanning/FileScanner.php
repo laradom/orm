@@ -6,7 +6,6 @@ namespace Laradom\ORM\Scanning;
 
 use Illuminate\Filesystem\Filesystem;
 use Psr\Log\LoggerInterface;
-use Psr\Log\NullLogger;
 use Symfony\Component\Finder\SplFileInfo;
 use Throwable;
 
@@ -101,10 +100,10 @@ class FileScanner
         try {
             $content = $file->getContents();
             $tokens = token_get_all($content);
-            $namespace = '';
-            $className = null;
             $namespaceFound = false;
             $classFound = false;
+            $namespace = '';
+            $className = '';
 
             foreach ($tokens as $token) {
                 if (is_array($token)) {
@@ -122,7 +121,7 @@ class FileScanner
                         continue;
                     }
 
-                    if ($classFound && $token[0] === T_STRING && $className === null) {
+                    if ($classFound && $token[0] === T_STRING) {
                         $className = $token[1];
                         break;
                     }
@@ -133,7 +132,7 @@ class FileScanner
                 }
             }
 
-            if ($className !== null) {
+            if ($className !== '') {
                 return $namespace ? $namespace . '\\' . $className : $className;
             }
         } catch (Throwable $e) {

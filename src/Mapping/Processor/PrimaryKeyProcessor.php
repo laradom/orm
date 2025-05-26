@@ -10,7 +10,6 @@ use Laradom\ORM\Mapping\ColumnOptionsMetadata;
 use Laradom\ORM\Mapping\EntityMetadata;
 use Laradom\ORM\Mapping\FieldMetadata;
 use Laradom\ORM\Mapping\GeneratedFieldMetadata;
-use Laradom\ORM\Mapping\Naming\NamingStrategyInterface;
 
 class PrimaryKeyProcessor implements MetadataProcessorInterface
 {

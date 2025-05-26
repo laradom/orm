@@ -16,8 +16,8 @@ class RelationMetadata
     private ?string $inversedBy = null;
     private CascadeTypeMetadata $cascade;
     private bool $orphanRemoval = false;
-    /** @var JoinColumnMetadata[]|null */
-    private ?array $joinColumns = null;
+    /** @var JoinColumnMetadata[] */
+    private array $joinColumns = [];
     private ?JoinTableMetadata $joinTable = null;
     private FetchStrategyMetadata $fetchStrategy = FetchStrategyMetadata::LAZY;
 
@@ -116,14 +116,13 @@ class RelationMetadata
 
     public function addJoinColumn(JoinColumnMetadata $joinColumn): void
     {
-        if ($this->joinColumns === null) {
-            $this->joinColumns = [];
-        }
-
         $this->joinColumns[] = $joinColumn;
     }
 
-    public function setJoinColumns(?array $joinColumns): void
+    /**
+     * @param JoinColumnMetadata[] $joinColumns
+     */
+    public function setJoinColumns(array $joinColumns = []): void
     {
         $this->joinColumns = $joinColumns;
     }

@@ -10,7 +10,6 @@ use Laradom\ORM\Mapping\Driver\DriverInterface;
 use Laradom\ORM\Mapping\Processor\MetadataProcessorPipeline;
 use Laradom\ORM\Scanning\FileScanner;
 use Psr\SimpleCache\InvalidArgumentException;
-use Throwable;
 
 class EntityMetadataFactory
 {
@@ -123,7 +122,7 @@ class EntityMetadataFactory
         foreach ($files as $file) {
             $className = $file->getClassName();
 
-            if (class_exists($className) && $this->driver->supports($className)) {
+            if ($this->driver->supports($className)) {
                 $metadata = $this->buildMetadata($className);
 
                 if ($metadata !== null) {

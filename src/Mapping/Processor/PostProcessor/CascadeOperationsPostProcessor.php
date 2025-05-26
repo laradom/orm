@@ -10,6 +10,11 @@ use Laradom\ORM\Mapping\RelationMetadata;
 
 class CascadeOperationsPostProcessor implements EntityMetadataPostProcessorInterface
 {
+    /**
+     * @param EntityMetadata[] $allMetadata
+     *
+     * @return EntityMetadata[]
+     */
     public function process(array $allMetadata): array
     {
         foreach ($allMetadata as $metadata) {
@@ -19,6 +24,9 @@ class CascadeOperationsPostProcessor implements EntityMetadataPostProcessorInter
         return $allMetadata;
     }
 
+    /**
+     * @param EntityMetadata[] $allMetadata
+     */
     private function processCascadeOperations(EntityMetadata $metadata, array $allMetadata): void
     {
         foreach ($metadata->getRelations() as $relation) {
@@ -61,6 +69,9 @@ class CascadeOperationsPostProcessor implements EntityMetadataPostProcessorInter
         }
     }
 
+    /**
+     * @param EntityMetadata[] $allMetadata
+     */
     private function ensureConsistentBidirectionalCascade(
         RelationMetadata $relation,
         array $allMetadata,

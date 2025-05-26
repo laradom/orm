@@ -7,6 +7,7 @@ namespace Laradom\ORM\Mapping\Driver\AttributeHandler;
 use Laradom\ORM\Attributes\Column;
 use Laradom\ORM\Enum\Attributes\Types;
 use Laradom\ORM\Mapping\FieldMetadata;
+use ReflectionNamedType;
 use ReflectionProperty;
 
 final class ColumnAttributeHandler extends AbstractAttributeHandler implements FieldHandlerInterface
@@ -31,7 +32,12 @@ final class ColumnAttributeHandler extends AbstractAttributeHandler implements F
 
         $propertyName = $property->getName();
 
-        $namedType = $propertyType ? Types::from(mb_strtolower($propertyType->getName())) : Types::STRING;
+        $namedType = Types::STRING;
+
+        if ($propertyType instanceof ReflectionNamedType) {
+            $namedType = Types::from(mb_strtolower($propertyType->getName()));
+        }
+
         $attributeType = $attribute->type ?: $namedType;
 
         $fieldMetadata->setPropertyName($propertyName);
@@ -43,7 +49,7 @@ final class ColumnAttributeHandler extends AbstractAttributeHandler implements F
         $options->setUnique($attribute->unique);
         $options->setPrecision($attribute->precision);
         $options->setScale($attribute->scale);
-        $options->setNullable($attribute->nullable || $propertyType->allowsNull());
+        $options->setNullable($attribute->nullable || ($propertyType !== null && $propertyType->allowsNull()));
         $options->setColumnDefinition($attribute->columnDefinition);
 
         if ($attribute->default !== null) {

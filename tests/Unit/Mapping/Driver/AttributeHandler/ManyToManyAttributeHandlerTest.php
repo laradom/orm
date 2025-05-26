@@ -6,6 +6,7 @@ namespace Laradom\Tests\Unit\Mapping\Driver\AttributeHandler;
 
 use Laradom\ORM\Attributes\ManyToMany;
 use Laradom\ORM\Enum\Attributes\RelationTypes;
+use Laradom\ORM\Enum\CascadeType;
 use Laradom\ORM\Mapping\Driver\AttributeHandler\ManyToManyAttributeHandler;
 use Laradom\ORM\Mapping\RelationMetadata;
 use PHPUnit\Framework\TestCase;
@@ -42,7 +43,7 @@ class ManyToManyAttributeHandlerTest extends TestCase
         $this->assertEquals('TestRole', $this->relationMetadata->getTargetEntity());
         $this->assertEquals('users', $this->relationMetadata->getInversedBy());
         $this->assertNull($this->relationMetadata->getMappedBy());
-        $this->assertTrue($this->relationMetadata->isCascadePersist());
+        $this->assertTrue($this->relationMetadata->getCascade()->isPersist());
         $this->assertTrue($this->relationMetadata->isOrphanRemoval());
     }
 
@@ -57,7 +58,7 @@ class ManyToManyAttributeHandlerTest extends TestCase
         $this->assertEquals('TestUser', $this->relationMetadata->getTargetEntity());
         $this->assertNull($this->relationMetadata->getInversedBy());
         $this->assertEquals('roles', $this->relationMetadata->getMappedBy());
-        $this->assertFalse($this->relationMetadata->isCascadePersist());
+        $this->assertFalse($this->relationMetadata->getCascade()->isPersist());
         $this->assertFalse($this->relationMetadata->isOrphanRemoval());
     }
 }
@@ -66,7 +67,7 @@ class EntityWithManyToMany
 {
     public string $name;
 
-    #[ManyToMany(targetEntity: 'TestRole', inversedBy: 'users', cascadePersist: true, orphanRemoval: true)]
+    #[ManyToMany(targetEntity: 'TestRole', inversedBy: 'users', cascade: [CascadeType::PERSIST], orphanRemoval: true)]
     public array $roles;
 
     #[ManyToMany(targetEntity: 'TestUser', mappedBy: 'roles')]

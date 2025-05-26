@@ -6,6 +6,7 @@ namespace Laradom\Tests\Unit\Mapping\Driver\AttributeHandler;
 
 use Laradom\ORM\Attributes\OneToOne;
 use Laradom\ORM\Enum\Attributes\RelationTypes;
+use Laradom\ORM\Enum\CascadeType;
 use Laradom\ORM\Mapping\Driver\AttributeHandler\OneToOneAttributeHandler;
 use Laradom\ORM\Mapping\RelationMetadata;
 use PHPUnit\Framework\TestCase;
@@ -42,7 +43,7 @@ class OneToOneAttributeHandlerTest extends TestCase
         $this->assertEquals('TestProfile', $this->relationMetadata->getTargetEntity());
         $this->assertEquals('user', $this->relationMetadata->getInversedBy());
         $this->assertNull($this->relationMetadata->getMappedBy());
-        $this->assertTrue($this->relationMetadata->isCascadePersist());
+        $this->assertTrue($this->relationMetadata->getCascade()->isPersist());
         $this->assertTrue($this->relationMetadata->isOrphanRemoval());
     }
 
@@ -57,7 +58,7 @@ class OneToOneAttributeHandlerTest extends TestCase
         $this->assertEquals('TestUser', $this->relationMetadata->getTargetEntity());
         $this->assertEquals('profile', $this->relationMetadata->getMappedBy());
         $this->assertNull($this->relationMetadata->getInversedBy());
-        $this->assertFalse($this->relationMetadata->isCascadePersist());
+        $this->assertFalse($this->relationMetadata->getCascade()->isPersist());
         $this->assertFalse($this->relationMetadata->isOrphanRemoval());
     }
 }
@@ -66,7 +67,7 @@ class EntityWithOneToOne
 {
     public string $name;
 
-    #[OneToOne(targetEntity: 'TestProfile', inversedBy: 'user', cascadePersist: true, orphanRemoval: true)]
+    #[OneToOne(targetEntity: 'TestProfile', inversedBy: 'user', cascade: [CascadeType::PERSIST], orphanRemoval: true)]
     public object $profile;
 
     #[OneToOne(targetEntity: 'TestUser', mappedBy: 'profile')]

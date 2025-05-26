@@ -9,6 +9,9 @@ use Attribute;
 #[Attribute(Attribute::TARGET_CLASS | Attribute::IS_REPEATABLE)]
 class UniqueConstraint
 {
+    /**
+     * @param string[] $columns
+     */
     public function __construct(
         public readonly ?string $name = null,
         public readonly array $columns = [],

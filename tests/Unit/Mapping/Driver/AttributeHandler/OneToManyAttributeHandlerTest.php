@@ -6,6 +6,7 @@ namespace Laradom\Tests\Unit\Mapping\Driver\AttributeHandler;
 
 use Laradom\ORM\Attributes\OneToMany;
 use Laradom\ORM\Enum\Attributes\RelationTypes;
+use Laradom\ORM\Enum\CascadeType;
 use Laradom\ORM\Mapping\Driver\AttributeHandler\OneToManyAttributeHandler;
 use Laradom\ORM\Mapping\RelationMetadata;
 use PHPUnit\Framework\TestCase;
@@ -42,7 +43,7 @@ class OneToManyAttributeHandlerTest extends TestCase
         $this->assertEquals('TestPost', $this->relationMetadata->getTargetEntity());
         $this->assertEquals('user', $this->relationMetadata->getMappedBy());
         $this->assertNull($this->relationMetadata->getInversedBy());
-        $this->assertTrue($this->relationMetadata->isCascadePersist());
+        $this->assertTrue($this->relationMetadata->getCascade()->isPersist());
         $this->assertTrue($this->relationMetadata->isOrphanRemoval());
     }
 }
@@ -51,6 +52,6 @@ class EntityWithOneToMany
 {
     public string $name;
 
-    #[OneToMany(targetEntity: 'TestPost', mappedBy: 'user', cascadePersist: true, orphanRemoval: true)]
+    #[OneToMany(targetEntity: 'TestPost', mappedBy: 'user', cascade: [CascadeType::PERSIST], orphanRemoval: true)]
     public array $posts;
 }

@@ -6,7 +6,6 @@ namespace Laradom\ORM\Mapping\Processor;
 
 use Laradom\ORM\Enum\Attributes\Types;
 use Laradom\ORM\Mapping\EntityMetadata;
-use Laradom\ORM\Mapping\Naming\NamingStrategyInterface;
 
 class ColumnTypeProcessor implements MetadataProcessorInterface
 {

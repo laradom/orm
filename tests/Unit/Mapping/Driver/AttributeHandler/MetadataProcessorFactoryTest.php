@@ -8,6 +8,8 @@ use Laradom\ORM\Mapping\Driver\AttributeHandler\ColumnAttributeHandler;
 use Laradom\ORM\Mapping\Driver\AttributeHandler\FieldHandlerInterface;
 use Laradom\ORM\Mapping\Driver\AttributeHandler\GeneratedValueAttributeHandler;
 use Laradom\ORM\Mapping\Driver\AttributeHandler\IdAttributeHandler;
+use Laradom\ORM\Mapping\Driver\AttributeHandler\JoinColumnAttributeHandler;
+use Laradom\ORM\Mapping\Driver\AttributeHandler\JoinTableAttributeHandler;
 use Laradom\ORM\Mapping\Driver\AttributeHandler\ManyToManyAttributeHandler;
 use Laradom\ORM\Mapping\Driver\AttributeHandler\ManyToOneAttributeHandler;
 use Laradom\ORM\Mapping\Driver\AttributeHandler\MetadataProcessor;
@@ -44,7 +46,7 @@ class MetadataProcessorFactoryTest extends TestCase
     {
         $handlers = $this->factory->createRelationHandlers();
 
-        $this->assertCount(4, $handlers);
+        $this->assertCount(6, $handlers);
         $this->assertContainsOnlyInstancesOf(RelationHandlerInterface::class, $handlers);
 
         $handlerClasses = array_map(fn ($handler) => get_class($handler), $handlers);
@@ -52,6 +54,8 @@ class MetadataProcessorFactoryTest extends TestCase
         $this->assertContains(OneToManyAttributeHandler::class, $handlerClasses);
         $this->assertContains(ManyToOneAttributeHandler::class, $handlerClasses);
         $this->assertContains(ManyToManyAttributeHandler::class, $handlerClasses);
+        $this->assertContains(JoinColumnAttributeHandler::class, $handlerClasses);
+        $this->assertContains(JoinTableAttributeHandler::class, $handlerClasses);
     }
 
     public function testCreateWithDefaults(): void
@@ -69,7 +73,7 @@ class MetadataProcessorFactoryTest extends TestCase
         $relationHandlers = $relationHandlersProperty->getValue($processor);
 
         $this->assertCount(3, $fieldHandlers);
-        $this->assertCount(4, $relationHandlers);
+        $this->assertCount(6, $relationHandlers);
     }
 
     public function testCreateWithCustomHandlers(): void

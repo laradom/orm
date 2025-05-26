@@ -8,6 +8,9 @@ use Laradom\ORM\Mapping\EntityMetadata;
 
 class MetadataValidationPostProcessor implements EntityMetadataPostProcessorInterface
 {
+    /**
+     * @var array<string, string[]>
+     */
     private array $errors = [];
 
     /**
@@ -147,17 +150,17 @@ class MetadataValidationPostProcessor implements EntityMetadataPostProcessorInte
 
             if ($relation->getJoinColumns() !== null) {
                 foreach ($relation->getJoinColumns() as $joinColumn) {
-                    if ($joinColumn->getName() === null || trim($joinColumn->getName()) === '') {
+                    if (trim($joinColumn->getName()) === '') {
                         $this->addError($className, sprintf(
                             'Join column in relation "%s" is missing a name',
                             $fieldName,
                         ));
                     }
 
-                    if ($joinColumn->getReferencedColumnName() === null || trim($joinColumn->getReferencedColumnName()) === '') {
+                    if (trim($joinColumn->getReferencedColumnName()) === '') {
                         $this->addError($className, sprintf(
                             'Join column "%s" in relation "%s" is missing a referenced column name',
-                            $joinColumn->getName() ?? 'unnamed',
+                            $joinColumn->getName(),
                             $fieldName,
                         ));
                     }
@@ -173,7 +176,7 @@ class MetadataValidationPostProcessor implements EntityMetadataPostProcessorInte
                         $fieldName,
                     ));
                 } else {
-                    if ($joinTable->getName() === null || trim($joinTable->getName()) === '') {
+                    if (trim($joinTable->getName()) === '') {
                         $this->addError($className, sprintf(
                             'Join table in ManyToMany relation "%s" is missing a name',
                             $fieldName,

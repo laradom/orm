@@ -108,6 +108,9 @@ class EntityMetadata
         return null;
     }
 
+    /**
+     * @return RelationMetadata[]
+     */
     public function getRelationsByTargetEntity(string $targetEntity): array
     {
         $relations = [];

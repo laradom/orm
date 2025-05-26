@@ -6,6 +6,7 @@ namespace Laradom\Tests\Unit\Mapping\Driver\AttributeHandler;
 
 use Laradom\ORM\Attributes\ManyToOne;
 use Laradom\ORM\Enum\Attributes\RelationTypes;
+use Laradom\ORM\Enum\CascadeType;
 use Laradom\ORM\Mapping\Driver\AttributeHandler\ManyToOneAttributeHandler;
 use Laradom\ORM\Mapping\RelationMetadata;
 use PHPUnit\Framework\TestCase;
@@ -42,7 +43,7 @@ class ManyToOneAttributeHandlerTest extends TestCase
         $this->assertEquals('TestUser', $this->relationMetadata->getTargetEntity());
         $this->assertEquals('posts', $this->relationMetadata->getInversedBy());
         $this->assertNull($this->relationMetadata->getMappedBy());
-        $this->assertTrue($this->relationMetadata->isCascadePersist());
+        $this->assertTrue($this->relationMetadata->getCascade()->isPersist());
     }
 }
 
@@ -50,6 +51,6 @@ class EntityWithManyToOne
 {
     public string $title;
 
-    #[ManyToOne(targetEntity: 'TestUser', inversedBy: 'posts', cascadePersist: true)]
+    #[ManyToOne(targetEntity: 'TestUser', inversedBy: 'posts', cascade: [CascadeType::PERSIST])]
     public object $user;
 }

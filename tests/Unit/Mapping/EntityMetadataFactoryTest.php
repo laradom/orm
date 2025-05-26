@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Laradom\Tests\Unit\Mapping;
 
-use Exception;
 use Illuminate\Contracts\Cache\Repository as CacheRepository;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
@@ -245,6 +244,11 @@ class EntityMetadataFactoryTest extends TestCase
                 [$extractedMetadata2, $processedMetadata2],
             ]);
 
+        $this->metadataProcessor->method('postProcess')
+            ->willReturnCallback(function (array $metadataMap) {
+                return $metadataMap;
+            });
+
         $result = $this->factory->getAllMetadata();
 
         $this->assertCount(2, $result);
@@ -344,6 +348,11 @@ class EntityMetadataFactoryTest extends TestCase
                 [$extractedMetadata3, $processedMetadata3],
             ]);
 
+        $this->metadataProcessor->method('postProcess')
+            ->willReturnCallback(function (array $metadataMap) {
+                return $metadataMap;
+            });
+
         $factory = new EntityMetadataFactory(
             $this->driver,
             app(CacheRepository::class),
@@ -404,6 +413,11 @@ class EntityMetadataFactoryTest extends TestCase
                 [$cachedMetadata2, $cachedMetadata2],
             ]);
 
+        $this->metadataProcessor->method('postProcess')
+            ->willReturnCallback(function (array $metadataMap) {
+                return $metadataMap;
+            });
+
         $factory = new EntityMetadataFactory(
             $this->driver,
             app(CacheRepository::class),
@@ -450,6 +464,11 @@ class EntityMetadataFactoryTest extends TestCase
             ->willReturnMap([
                 [$className1, $cachedMetadata1],
             ]);
+
+        $this->metadataProcessor->method('postProcess')
+            ->willReturnCallback(function (array $metadataMap) {
+                return $metadataMap;
+            });
 
         $factory = new EntityMetadataFactory(
             $this->driver,
@@ -579,6 +598,11 @@ class EntityMetadataFactoryTest extends TestCase
                 [$extractedMetadata2, $processedMetadata2],
             ]);
 
+        $this->metadataProcessor->method('postProcess')
+            ->willReturnCallback(function (array $metadataMap) {
+                return $metadataMap;
+            });
+
         $method = new ReflectionMethod($this->factoryWithAccessibleMethods, 'buildAllMetadata');
         $result = $method->invoke($this->factoryWithAccessibleMethods);
 
@@ -605,21 +629,21 @@ class EntityMetadataFactoryTest extends TestCase
         $this->driver->method('supports')
             ->willReturnMap([
                 [$className1, true],
-                [$className2, true],
+                [$className2, false],
             ]);
 
         $this->driver->method('extractMetadata')
-            ->willReturnCallback(function ($className) use ($className1, $extractedMetadata1) {
-                if ($className === $className1) {
-                    return $extractedMetadata1;
-                }
-
-                throw new Exception('Test exception');
-            });
+            ->with($className1)
+            ->willReturn($extractedMetadata1);
 
         $this->metadataProcessor->method('process')
             ->with($extractedMetadata1)
             ->willReturn($processedMetadata1);
+
+        $this->metadataProcessor->method('postProcess')
+            ->willReturnCallback(function (array $metadataMap) {
+                return $metadataMap;
+            });
 
         $method = new ReflectionMethod($this->factoryWithAccessibleMethods, 'buildAllMetadata');
         $result = $method->invoke($this->factoryWithAccessibleMethods);
@@ -701,6 +725,11 @@ class EntityMetadataFactoryTest extends TestCase
         $this->metadataProcessor->method('process')
             ->with($extractedMetadata)
             ->willReturn($processedMetadata);
+
+        $this->metadataProcessor->method('postProcess')
+            ->willReturnCallback(function (array $metadataMap) {
+                return $metadataMap;
+            });
 
         $result = $factory->getAllMetadata();
 

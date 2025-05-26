@@ -9,6 +9,10 @@ use Attribute;
 #[Attribute(Attribute::TARGET_PROPERTY)]
 class JoinTable
 {
+    /**
+     * @param JoinColumn[] $joinColumns
+     * @param JoinColumn[] $inverseJoinColumns
+     */
     public function __construct(
         public readonly string $name,
         public readonly array $joinColumns = [],

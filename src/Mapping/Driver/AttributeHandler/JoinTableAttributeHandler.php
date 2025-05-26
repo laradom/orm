@@ -36,27 +36,23 @@ class JoinTableAttributeHandler extends AbstractAttributeHandler implements Rela
         $joinTable = new JoinTableMetadata(name: $attribute->name);
 
         foreach ($attribute->joinColumns as $joinColumnData) {
-            if (isset($joinColumnData['name'])) {
-                $joinColumn = new JoinColumnMetadata(
-                    name: $joinColumnData['name'],
-                    referencedColumnName: $joinColumnData['referencedColumnName'] ?? 'id',
-                    nullable: $joinColumnData['nullable'] ?? false,
-                    unique: $joinColumnData['unique'] ?? false,
-                );
-                $joinTable->addJoinColumn($joinColumn);
-            }
+            $joinColumn = new JoinColumnMetadata(
+                name: $joinColumnData->name,
+                referencedColumnName: $joinColumnData->referencedColumnName,
+                nullable: $joinColumnData->nullable,
+                unique: $joinColumnData->unique,
+            );
+            $joinTable->addJoinColumn($joinColumn);
         }
 
         foreach ($attribute->inverseJoinColumns as $inverseJoinColumnData) {
-            if (isset($inverseJoinColumnData['name'])) {
-                $inverseJoinColumn = new JoinColumnMetadata(
-                    name: $inverseJoinColumnData['name'],
-                    referencedColumnName: $inverseJoinColumnData['referencedColumnName'] ?? 'id',
-                    nullable: $inverseJoinColumnData['nullable'] ?? false,
-                    unique: $inverseJoinColumnData['unique'] ?? false,
-                );
-                $joinTable->addInverseJoinColumn($inverseJoinColumn);
-            }
+            $inverseJoinColumn = new JoinColumnMetadata(
+                name: $inverseJoinColumnData->name,
+                referencedColumnName: $inverseJoinColumnData->referencedColumnName,
+                nullable: $inverseJoinColumnData->nullable,
+                unique: $inverseJoinColumnData->unique,
+            );
+            $joinTable->addInverseJoinColumn($inverseJoinColumn);
         }
 
         $relationMetadata->setJoinTable($joinTable);

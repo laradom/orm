@@ -6,6 +6,9 @@ namespace Laradom\ORM\Mapping;
 
 class IndexMetadata
 {
+    /**
+     * @param string[] $columns
+     */
     public function __construct(
         private ?string $name = null,
         private array $columns = [],

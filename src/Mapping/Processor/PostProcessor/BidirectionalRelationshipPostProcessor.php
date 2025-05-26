@@ -4,10 +4,16 @@ declare(strict_types=1);
 
 namespace Laradom\ORM\Mapping\Processor\PostProcessor;
 
+use Laradom\ORM\Mapping\EntityMetadata;
 use Laradom\ORM\Mapping\RelationMetadata;
 
 class BidirectionalRelationshipPostProcessor implements EntityMetadataPostProcessorInterface
 {
+    /**
+     * @param EntityMetadata[] $allMetadata
+     *
+     * @return EntityMetadata[]
+     */
     public function process(array $allMetadata): array
     {
         foreach ($allMetadata as $metadata) {
@@ -21,6 +27,9 @@ class BidirectionalRelationshipPostProcessor implements EntityMetadataPostProces
         return $allMetadata;
     }
 
+    /**
+     * @param EntityMetadata[] $allMetadata
+     */
     private function setupInverseRelation(array $allMetadata, RelationMetadata $relation): void
     {
         $targetClassName = $relation->getTargetEntity();
