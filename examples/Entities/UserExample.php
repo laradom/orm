@@ -10,6 +10,7 @@ use Laradom\ORM\Attributes\Entity;
 use Laradom\ORM\Attributes\GeneratedValue;
 use Laradom\ORM\Attributes\Id;
 use Laradom\ORM\Attributes\Index;
+use Laradom\ORM\Attributes\JoinTable;
 use Laradom\ORM\Attributes\ManyToMany;
 use Laradom\ORM\Attributes\OneToMany;
 use Laradom\ORM\Attributes\OneToOne;

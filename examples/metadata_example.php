@@ -12,17 +12,17 @@ use Laradom\ORM\Mapping\EntityMetadataFactory;
 use Laradom\ORM\Mapping\Naming\DefaultNamingStrategy;
 use Laradom\ORM\Mapping\Processor\ColumnTypeProcessor;
 use Laradom\ORM\Mapping\Processor\FieldNameProcessor;
-use Laradom\ORM\Mapping\Processor\IndexNameProcessor;
-use Laradom\ORM\Mapping\Processor\JoinColumnProcessor;
-use Laradom\ORM\Mapping\Processor\JoinTableProcessor;
 use Laradom\ORM\Mapping\Processor\MetadataProcessorPipeline;
 use Laradom\ORM\Mapping\Processor\PostProcessor\BidirectionalRelationshipPostProcessor;
 use Laradom\ORM\Mapping\Processor\PostProcessor\CascadeOperationsPostProcessor;
-use Laradom\ORM\Mapping\Processor\PostProcessor\MetadataValidationPostProcessor;
+use Laradom\ORM\Mapping\Processor\PostProcessor\IndexNamePostProcessor;
+use Laradom\ORM\Mapping\Processor\PostProcessor\JoinColumnPostProcessor;
+use Laradom\ORM\Mapping\Processor\PostProcessor\JoinTablePostProcessor;
+use Laradom\ORM\Mapping\Processor\PostProcessor\UniqueConstraintNamePostProcessor;
 use Laradom\ORM\Mapping\Processor\PrimaryKeyProcessor;
 use Laradom\ORM\Mapping\Processor\TableNameProcessor;
-use Laradom\ORM\Mapping\Processor\UniqueConstraintNameProcessor;
 use Laradom\ORM\Scanning\FileScanner;
+use Laradom\ORM\Util\Inflector\EnglishInflector;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -31,24 +31,25 @@ $store = new ArrayStore();
 $cache = new CacheRepository($store);
 $entityScanner = new FileScanner($filesystem, [__DIR__ . '/Entities']);
 
+$inflector = new EnglishInflector();
+
 $namingStrategy = new DefaultNamingStrategy();
 
 $metadataFactory = new MetadataProcessorFactory();
 $attributeDriver = new AttributeDriver($metadataFactory->create());
 
 $metadataProcessorPipeline = new MetadataProcessorPipeline([
-    new TableNameProcessor($namingStrategy),
+    new TableNameProcessor($namingStrategy, $inflector),
     new FieldNameProcessor($namingStrategy),
-    new IndexNameProcessor(),
-    new UniqueConstraintNameProcessor(),
     new PrimaryKeyProcessor(),
     new ColumnTypeProcessor(),
-    new JoinColumnProcessor($namingStrategy),
-    new JoinTableProcessor($namingStrategy),
 ], [
     new BidirectionalRelationshipPostProcessor(),
     new CascadeOperationsPostProcessor(),
-    new MetadataValidationPostProcessor(),
+    new JoinTablePostProcessor($namingStrategy, $inflector),
+    new JoinColumnPostProcessor($namingStrategy, $inflector),
+    new IndexNamePostProcessor(),
+    new UniqueConstraintNamePostProcessor(),
 ]);
 
 $entityMetadataFactory = new EntityMetadataFactory(

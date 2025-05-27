@@ -19,6 +19,5 @@ class ManyToOne
         public readonly ?string $inversedBy = null,
         public readonly array $cascade = [],
         public readonly FetchStrategyMetadata $fetch = FetchStrategyMetadata::LAZY,
-        public readonly bool $orphanRemoval = false,
     ) {}
 }

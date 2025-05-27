@@ -12,7 +12,6 @@ use Laradom\ORM\Mapping\Driver\AttributeHandler\JoinColumnAttributeHandler;
 use Laradom\ORM\Mapping\Driver\AttributeHandler\JoinTableAttributeHandler;
 use Laradom\ORM\Mapping\Driver\AttributeHandler\ManyToManyAttributeHandler;
 use Laradom\ORM\Mapping\Driver\AttributeHandler\ManyToOneAttributeHandler;
-use Laradom\ORM\Mapping\Driver\AttributeHandler\MetadataProcessor;
 use Laradom\ORM\Mapping\Driver\AttributeHandler\MetadataProcessorFactory;
 use Laradom\ORM\Mapping\Driver\AttributeHandler\OneToManyAttributeHandler;
 use Laradom\ORM\Mapping\Driver\AttributeHandler\OneToOneAttributeHandler;
@@ -61,8 +60,6 @@ class MetadataProcessorFactoryTest extends TestCase
     public function testCreateWithDefaults(): void
     {
         $processor = $this->factory->create();
-
-        $this->assertInstanceOf(MetadataProcessor::class, $processor);
 
         $reflection = new ReflectionClass($processor);
 

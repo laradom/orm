@@ -11,6 +11,7 @@ use Laradom\ORM\Mapping\Naming\DefaultNamingStrategy;
 use Laradom\ORM\Mapping\Processor\FieldNameProcessor;
 use Laradom\ORM\Mapping\Processor\MetadataProcessorPipeline;
 use Laradom\ORM\Mapping\Processor\TableNameProcessor;
+use Laradom\ORM\Util\Inflector\EnglishInflector;
 use Laradom\Tests\TestCase;
 
 class MetadataProcessorIntegrationTest extends TestCase
@@ -21,8 +22,9 @@ class MetadataProcessorIntegrationTest extends TestCase
 
     protected function setUp(): void
     {
+        $inflector = new EnglishInflector();
         $namingStrategy = new DefaultNamingStrategy();
-        $this->tableNameProcessor = new TableNameProcessor($namingStrategy);
+        $this->tableNameProcessor = new TableNameProcessor($namingStrategy, $inflector);
         $this->fieldNameProcessor = new FieldNameProcessor($namingStrategy);
 
         $this->pipeline = new MetadataProcessorPipeline([
@@ -42,7 +44,7 @@ class MetadataProcessorIntegrationTest extends TestCase
 
         $result = $this->pipeline->process($metadata);
 
-        $this->assertEquals('user_profile', $result->getTableName());
+        $this->assertEquals('user_profiles', $result->getTableName());
 
         $this->assertEquals('id', $result->getFields()[0]->getColumnName());
         $this->assertEquals('user_name', $result->getFields()[1]->getColumnName());
@@ -76,7 +78,7 @@ class MetadataProcessorIntegrationTest extends TestCase
 
         $result = $this->pipeline->process($metadata);
 
-        $this->assertEquals('user_profile', $result->getTableName());
+        $this->assertEquals('user_profiles', $result->getTableName());
 
         $this->assertEquals('custom_id', $result->getFields()[0]->getColumnName());
         $this->assertEquals('custom_user_name', $result->getFields()[1]->getColumnName());
@@ -95,7 +97,7 @@ class MetadataProcessorIntegrationTest extends TestCase
 
         $result = $this->pipeline->process($metadata);
 
-        $this->assertEquals('user_profile', $result->getTableName());
+        $this->assertEquals('user_profiles', $result->getTableName());
 
         $this->assertEquals('custom_id', $result->getFields()[0]->getColumnName());
         $this->assertEquals('user_name', $result->getFields()[1]->getColumnName());
@@ -118,7 +120,7 @@ class MetadataProcessorIntegrationTest extends TestCase
 
         $result = $reversedPipeline->process($metadata);
 
-        $this->assertEquals('user_profile', $result->getTableName());
+        $this->assertEquals('user_profiles', $result->getTableName());
         $this->assertEquals('id', $result->getFields()[0]->getColumnName());
         $this->assertEquals('user_name', $result->getFields()[1]->getColumnName());
     }

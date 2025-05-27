@@ -17,13 +17,6 @@ class JoinTableAttributeHandler extends AbstractAttributeHandler implements Rela
         return JoinTable::class;
     }
 
-    public function support(ReflectionProperty $property): bool
-    {
-        $attributes = $property->getAttributes(JoinTable::class);
-
-        return count($attributes) > 0;
-    }
-
     public function handle(ReflectionProperty $property, RelationMetadata $relationMetadata): void
     {
         /** @var JoinTable|null $attribute */

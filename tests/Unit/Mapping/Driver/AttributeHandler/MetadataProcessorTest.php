@@ -87,7 +87,7 @@ class MetadataProcessorTest extends TestCase
                 }
             });
 
-        $this->relationHandler->expects($this->exactly(3))
+        $this->relationHandler->expects($this->exactly(4))
             ->method('support')
             ->willReturnCallback(function (ReflectionProperty $property) {
                 if ($property->getName() === 'items') {

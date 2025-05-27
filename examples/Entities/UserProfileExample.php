@@ -13,7 +13,7 @@ use Laradom\ORM\Attributes\Table;
 use Laradom\ORM\Enum\Attributes\Types;
 
 #[Entity]
-#[Table(name: 'user_profile')]
+#[Table(name: 'user_profiles')]
 class UserProfileExample
 {
     #[Id]

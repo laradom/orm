@@ -19,6 +19,8 @@ use Laradom\ORM\Mapping\Naming\NamingStrategyInterface;
 use Laradom\ORM\Mapping\Processor\FieldNameProcessor;
 use Laradom\ORM\Mapping\Processor\MetadataProcessorPipeline;
 use Laradom\ORM\Mapping\Processor\TableNameProcessor;
+use Laradom\ORM\Util\Inflector\EnglishInflector;
+use Laradom\ORM\Util\Inflector\InflectorInterface;
 use Laradom\ORM\Scanning\FileScanner;
 use Throwable;
 
@@ -48,6 +50,10 @@ class LaradomServiceProvider extends ServiceProvider
 
         $this->app->singleton(NamingStrategyInterface::class, function () {
             return new (config('laradom.config.naming_strategy', DefaultNamingStrategy::class))();
+        });
+        
+        $this->app->singleton(InflectorInterface::class, function () {
+            return new EnglishInflector();
         });
 
         $this->app->singleton(MetadataProcessorPipeline::class, function ($app) {

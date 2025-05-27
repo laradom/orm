@@ -88,10 +88,17 @@ class MetadataProcessor
     private function processProperties(ReflectionClass $class, EntityMetadata $metadata): void
     {
         foreach ($class->getProperties() as $property) {
-            $relationHandler = $this->findRelationHandler($property);
+            $hasRelationAttributes = false;
 
-            if ($relationHandler !== null) {
-                $this->processRelationProperty($property, $metadata, $relationHandler);
+            foreach ($this->relationHandlers as $handler) {
+                if ($handler->support($property)) {
+                    $hasRelationAttributes = true;
+                    break;
+                }
+            }
+
+            if ($hasRelationAttributes) {
+                $this->processRelationProperty($property, $metadata);
             } else {
                 $this->processFieldProperty($property, $metadata);
             }
@@ -101,10 +108,15 @@ class MetadataProcessor
     private function processRelationProperty(
         ReflectionProperty $property,
         EntityMetadata $metadata,
-        RelationHandlerInterface $handler,
     ): void {
         $relationMetadata = new RelationMetadata();
-        $handler->handle($property, $relationMetadata);
+
+        foreach ($this->relationHandlers as $handler) {
+            if ($handler->support($property)) {
+                $handler->handle($property, $relationMetadata);
+            }
+        }
+
         $metadata->addRelation($relationMetadata);
     }
 
@@ -123,16 +135,5 @@ class MetadataProcessor
         if ($handled) {
             $metadata->addField($fieldMetadata);
         }
-    }
-
-    private function findRelationHandler(ReflectionProperty $property): ?RelationHandlerInterface
-    {
-        foreach ($this->relationHandlers as $handler) {
-            if ($handler->support($property)) {
-                return $handler;
-            }
-        }
-
-        return null;
     }
 }

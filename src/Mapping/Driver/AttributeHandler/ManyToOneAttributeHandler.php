@@ -29,7 +29,6 @@ class ManyToOneAttributeHandler extends AbstractAttributeHandler implements Rela
         $relationMetadata->setType(RelationTypes::ManyToOne);
         $relationMetadata->setFieldName($property->getName());
         $relationMetadata->setTargetEntity($attribute->targetEntity);
-        $relationMetadata->setOrphanRemoval($attribute->orphanRemoval);
 
         if ($attribute->inversedBy !== null) {
             $relationMetadata->setInversedBy($attribute->inversedBy);
