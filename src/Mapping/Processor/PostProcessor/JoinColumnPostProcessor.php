@@ -27,31 +27,29 @@ class JoinColumnPostProcessor implements EntityMetadataPostProcessorInterface
         foreach ($allMetadata as $entityMetadata) {
             foreach ($entityMetadata->getRelations() as $relation) {
                 if (
-                    ($relation->getType() === RelationTypes::ManyToOne || $relation->getType() === RelationTypes::OneToOne)
+                    ($relation->getType() === RelationTypes::ManyToOne
+                    || ($relation->getType() === RelationTypes::OneToOne && $relation->getMappedBy() === null))
                     && ($relation->getJoinColumns() === null || count($relation->getJoinColumns()) === 0)
                 ) {
                     $targetEntityClass = $relation->getTargetEntity();
 
+                    $targetEntityShortName = $this->namingStrategy->getShortClassName($targetEntityClass);
+                    $columnName = $this->namingStrategy->joinColumnName(lcfirst($targetEntityShortName));
+
                     if (isset($allMetadata[$targetEntityClass])) {
                         $targetTableName = $allMetadata[$targetEntityClass]->getTableName();
-                        $singularName = $this->inflector->singularize($targetTableName);
-                        $columnName = $this->namingStrategy->joinColumnName($singularName);
-                    } else {
-                        $targetEntityShortName = $this->namingStrategy->getShortClassName($targetEntityClass);
-                        $columnName = $this->namingStrategy->joinColumnName(lcfirst($targetEntityShortName));
-                    }
 
-                    $isUnique = false;
-
-                    if ($relation->getType() === RelationTypes::OneToOne && $relation->getMappedBy() === null) {
-                        $isUnique = true;
+                        if ($targetTableName !== null) {
+                            $singularName = $this->inflector->singularize($targetTableName);
+                            $columnName = $this->namingStrategy->joinColumnName($singularName);
+                        }
                     }
 
                     $joinColumn = new JoinColumnMetadata(
                         name: $columnName,
                         referencedColumnName: $this->namingStrategy->referenceColumnName(),
-                        nullable: !($relation->getType() === RelationTypes::OneToOne) || $relation->getMappedBy() !== null,
-                        unique: $isUnique,
+                        nullable: $relation->getType() !== RelationTypes::OneToOne || $relation->getMappedBy() !== null,
+                        unique: $relation->getType() === RelationTypes::OneToOne && $relation->getMappedBy() === null,
                     );
 
                     $relation->addJoinColumn($joinColumn);

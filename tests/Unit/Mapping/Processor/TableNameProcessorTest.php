@@ -14,7 +14,7 @@ use PHPUnit\Framework\TestCase;
 class TableNameProcessorTest extends TestCase
 {
     private MockObject|NamingStrategyInterface $namingStrategy;
-    private MockObject|InflectorInterface $inflector;
+    private InflectorInterface|MockObject $inflector;
     private TableNameProcessor $processor;
 
     protected function setUp(): void
@@ -27,12 +27,12 @@ class TableNameProcessorTest extends TestCase
     public function testProcessWithExistingTableName(): void
     {
         $metadata = new EntityMetadata('TestEntity', 'existing_table');
-        
+
         $this->inflector->expects($this->once())
             ->method('pluralize')
             ->with('existing_table')
             ->willReturn('existing_table');
-            
+
         $this->namingStrategy->expects($this->once())
             ->method('classToTableName')
             ->with('existing_table')
@@ -52,7 +52,7 @@ class TableNameProcessorTest extends TestCase
             ->method('pluralize')
             ->with('TestEntity')
             ->willReturn('TestEntities');
-            
+
         $this->namingStrategy->expects($this->once())
             ->method('classToTableName')
             ->with('TestEntities')

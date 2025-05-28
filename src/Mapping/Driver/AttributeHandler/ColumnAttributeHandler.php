@@ -54,6 +54,10 @@ final class ColumnAttributeHandler extends AbstractAttributeHandler implements F
 
         if ($attribute->default !== null) {
             $fieldMetadata->setDefaultValue($attribute->default);
+        } else {
+            if ($property->hasDefaultValue()) {
+                $fieldMetadata->setDefaultValue($property->getDefaultValue());
+            }
         }
     }
 }

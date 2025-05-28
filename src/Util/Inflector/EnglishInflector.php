@@ -54,7 +54,7 @@ class EnglishInflector implements InflectorInterface
 
     public function pluralize(string $singular): string
     {
-        if (str_ends_with($singular, 's') && !str_ends_with($singular, 'ss')) {
+        if (preg_match('/(es|ies|ves|[^s]s)$/i', $singular)) {
             return $singular;
         }
 
@@ -73,8 +73,6 @@ class EnglishInflector implements InflectorInterface
             'agency' => 'agencies',
             'movie' => 'movies',
             'archive' => 'archives',
-            'users' => 'users',
-            'user_profile' => 'user_profile',
         ];
 
         if (isset($irregulars[$singular])) {

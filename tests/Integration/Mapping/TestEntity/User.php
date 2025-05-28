@@ -9,40 +9,34 @@ use Laradom\ORM\Attributes\Column;
 use Laradom\ORM\Attributes\Entity;
 use Laradom\ORM\Attributes\GeneratedValue;
 use Laradom\ORM\Attributes\Id;
-use Laradom\ORM\Attributes\JoinColumn;
 use Laradom\ORM\Attributes\ManyToMany;
 use Laradom\ORM\Attributes\OneToMany;
 use Laradom\ORM\Attributes\OneToOne;
-use Laradom\ORM\Attributes\Table;
-use Laradom\ORM\Enum\Attributes\GeneratorType;
 use Laradom\ORM\Enum\Attributes\Types;
-use Laradom\ORM\Enum\CascadeType;
 
 #[Entity]
-#[Table(name: 'users')]
 class User
 {
     #[Id]
-    #[Column(name: 'id', type: Types::INTEGER)]
-    #[GeneratedValue(strategy: GeneratorType::IDENTITY)]
+    #[Column]
+    #[GeneratedValue]
     private int $id;
 
-    #[Column(name: 'email', type: Types::STRING, unique: true)]
+    #[Column(unique: true)]
     private string $email;
 
-    #[Column(name: 'name', type: Types::STRING)]
+    #[Column(default: 'user_name')]
     private string $name;
 
-    #[Column(name: 'created_at', type: Types::DATETIME)]
+    #[Column(type: Types::DATETIME)]
     private DateTime $createdAt;
 
-    #[OneToOne(targetEntity: Profile::class, inversedBy: 'user', cascade: [CascadeType::PERSIST, CascadeType::REMOVE])]
-    #[JoinColumn(name: 'profile_id', referencedColumnName: 'id')]
+    #[OneToOne(targetEntity: Profile::class, inversedBy: 'user')]
     private Profile $profile;
 
-    #[OneToMany(targetEntity: Post::class, mappedBy: 'user', cascade: [CascadeType::PERSIST], orphanRemoval: true)]
+    #[OneToMany(targetEntity: Post::class, mappedBy: 'user')]
     private array $posts = [];
 
-    #[ManyToMany(targetEntity: Tag::class, inversedBy: 'users', cascade: [CascadeType::PERSIST])]
+    #[ManyToMany(targetEntity: Tag::class, inversedBy: 'users')]
     private array $tags = [];
 }

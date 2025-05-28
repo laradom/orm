@@ -37,6 +37,10 @@ class JoinTablePostProcessor implements EntityMetadataPostProcessorInterface
                         $targetTableName = $this->namingStrategy->classToTableName($targetEntityClass);
                     }
 
+                    if ($sourceTableName === null || $targetTableName === null) {
+                        continue;
+                    }
+
                     $tableName = $this->namingStrategy->joinTableName($sourceTableName, $targetTableName);
 
                     $joinTable = new JoinTableMetadata(name: $tableName);
@@ -48,6 +52,7 @@ class JoinTablePostProcessor implements EntityMetadataPostProcessorInterface
                         nullable: false,
                         unique: false,
                     );
+
                     $joinTable->addJoinColumn($joinColumn);
 
                     $singularTargetName = $this->inflector->singularize($targetTableName);
@@ -57,6 +62,7 @@ class JoinTablePostProcessor implements EntityMetadataPostProcessorInterface
                         nullable: false,
                         unique: false,
                     );
+
                     $joinTable->addInverseJoinColumn($inverseJoinColumn);
 
                     $relation->setJoinTable($joinTable);
