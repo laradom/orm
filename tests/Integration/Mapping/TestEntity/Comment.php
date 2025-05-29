@@ -11,10 +11,12 @@ use Laradom\ORM\Attributes\GeneratedValue;
 use Laradom\ORM\Attributes\Id;
 use Laradom\ORM\Attributes\JoinColumn;
 use Laradom\ORM\Attributes\ManyToOne;
+use Laradom\ORM\Attributes\Table;
 use Laradom\ORM\Enum\Attributes\GeneratorType;
 use Laradom\ORM\Enum\Attributes\Types;
 
 #[Entity]
+#[Table(name: 'comments')]
 class Comment
 {
     #[Id]

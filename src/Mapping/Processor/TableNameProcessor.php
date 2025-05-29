@@ -17,17 +17,14 @@ class TableNameProcessor implements MetadataProcessorInterface
 
     public function process(EntityMetadata $entityMetadata): EntityMetadata
     {
-        $name = $entityMetadata->getClassName();
-
         if ($entityMetadata->getTableName() !== null) {
             $name = $entityMetadata->getTableName();
+        } else {
+            $name = $this->namingStrategy->classToTableName($entityMetadata->getClassName());
+            $name = $this->inflector->pluralize($name);
         }
 
-        $entityMetadata->setTableName(
-            $this->namingStrategy->classToTableName(
-                $this->inflector->pluralize($name),
-            ),
-        );
+        $entityMetadata->setTableName($name);
 
         return $entityMetadata;
     }

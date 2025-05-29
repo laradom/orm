@@ -26,22 +26,18 @@ class TableNameProcessorTest extends TestCase
 
     public function testProcessWithExistingTableName(): void
     {
-        $metadata = new EntityMetadata('TestEntity', 'existing_table');
+        $metadata = new EntityMetadata('TestEntity', 'test_entities');
 
-        $this->inflector->expects($this->once())
-            ->method('pluralize')
-            ->with('existing_table')
-            ->willReturn('existing_table');
+        $this->inflector->expects($this->never())
+            ->method('pluralize');
 
-        $this->namingStrategy->expects($this->once())
-            ->method('classToTableName')
-            ->with('existing_table')
-            ->willReturn('existing_table');
+        $this->namingStrategy->expects($this->never())
+            ->method('classToTableName');
 
         $result = $this->processor->process($metadata);
 
         $this->assertSame($metadata, $result);
-        $this->assertEquals('existing_table', $result->getTableName());
+        $this->assertEquals('test_entities', $result->getTableName());
     }
 
     public function testProcessWithoutTableName(): void
@@ -50,12 +46,12 @@ class TableNameProcessorTest extends TestCase
 
         $this->inflector->expects($this->once())
             ->method('pluralize')
-            ->with('TestEntity')
-            ->willReturn('TestEntities');
+            ->with('test_entities')
+            ->willReturn('test_entities');
 
         $this->namingStrategy->expects($this->once())
             ->method('classToTableName')
-            ->with('TestEntities')
+            ->with('TestEntity')
             ->willReturn('test_entities');
 
         $result = $this->processor->process($metadata);

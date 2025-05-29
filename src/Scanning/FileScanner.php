@@ -44,7 +44,7 @@ class FileScanner
                     $className,
                 );
             } catch (Throwable $e) {
-                $this->logger?->error("[Laradom] Ошибка при сканировании файла {$file->getPathname()}: {$e->getMessage()}");
+                $this->logger?->error("[Laradom] Error when scanning a file {$file->getPathname()}: {$e->getMessage()}");
             }
         }
 
@@ -76,7 +76,7 @@ class FileScanner
                 $phpFiles = array_filter($directoryFiles, fn (SplFileInfo $file) => $file->getExtension() === 'php');
                 $files = array_merge($files, array_values($phpFiles));
             } catch (Throwable $e) {
-                $this->logger?->error("[Laradom] Ошибка при сканировании директории {$path}: {$e->getMessage()}");
+                $this->logger?->error("[Laradom] Error when scanning a directory {$path}: {$e->getMessage()}");
             }
         }
 
@@ -136,7 +136,7 @@ class FileScanner
                 return $namespace ? $namespace . '\\' . $className : $className;
             }
         } catch (Throwable $e) {
-            $this->logger?->error("[Laradom] Ошибка при парсинге файла {$file->getPathname()}: {$e->getMessage()}");
+            $this->logger?->error("[Laradom] Error when parsing a file {$file->getPathname()}: {$e->getMessage()}");
         }
 
         return null;

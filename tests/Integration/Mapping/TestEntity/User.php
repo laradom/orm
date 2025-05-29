@@ -12,9 +12,11 @@ use Laradom\ORM\Attributes\Id;
 use Laradom\ORM\Attributes\ManyToMany;
 use Laradom\ORM\Attributes\OneToMany;
 use Laradom\ORM\Attributes\OneToOne;
+use Laradom\ORM\Attributes\Table;
 use Laradom\ORM\Enum\Attributes\Types;
 
 #[Entity]
+#[Table(name: 'users')]
 class User
 {
     #[Id]

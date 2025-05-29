@@ -9,10 +9,12 @@ use Laradom\ORM\Attributes\Entity;
 use Laradom\ORM\Attributes\GeneratedValue;
 use Laradom\ORM\Attributes\Id;
 use Laradom\ORM\Attributes\ManyToMany;
+use Laradom\ORM\Attributes\Table;
 use Laradom\ORM\Enum\Attributes\GeneratorType;
 use Laradom\ORM\Enum\Attributes\Types;
 
 #[Entity]
+#[Table(name: 'tags')]
 class Tag
 {
     #[Id]
