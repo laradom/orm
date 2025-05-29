@@ -1,0 +1,18 @@
+{
+    "$schema": "./vendor/phpbench/phpbench/phpbench.schema.json",
+    "runner.bootstrap": "benchmarks/bootstrap.php",
+    "runner.path": "benchmarks",
+    "runner.time_unit": "milliseconds",
+    "runner.retry_threshold": 5,
+    "runner.revs": 10,
+    "runner.iterations": 5,
+    "runner.warmup": 2,
+    "report.generators": {
+        "default": {
+            "extends": "aggregate",
+            "title": "Laradom ORM Benchmarks",
+            "description": "Benchmarks for Loradom ORM",
+            "cols": ["benchmark", "subject", "mean", "mode", "rstdev", "mem_peak"]
+        }
+    }
+}
