@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace Laradom\ORM\Mapping\Processor;
 
 use Laradom\ORM\Mapping\EntityMetadata;
-use Laradom\ORM\Mapping\Naming\NamingStrategyInterface;
-use Laradom\ORM\Util\Inflector\InflectorInterface;
+use Laradom\ORM\Util\Inflector\InflectorStrategyInterface;
+use Laradom\ORM\Util\Naming\NamingStrategyInterface;
 
 class TableNameProcessor implements MetadataProcessorInterface
 {
     public function __construct(
         private readonly NamingStrategyInterface $namingStrategy,
-        private readonly InflectorInterface $inflector,
+        private readonly InflectorStrategyInterface $inflector,
     ) {}
 
     public function process(EntityMetadata $entityMetadata): EntityMetadata

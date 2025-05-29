@@ -11,7 +11,6 @@ use Laradom\ORM\Enum\Attributes\Types;
 use Laradom\ORM\Mapping\Driver\AttributeDriver;
 use Laradom\ORM\Mapping\Driver\AttributeHandler\MetadataProcessorFactory;
 use Laradom\ORM\Mapping\EntityMetadataFactory;
-use Laradom\ORM\Mapping\Naming\DefaultNamingStrategy;
 use Laradom\ORM\Mapping\Processor\ColumnTypeProcessor;
 use Laradom\ORM\Mapping\Processor\FieldNameProcessor;
 use Laradom\ORM\Mapping\Processor\MetadataProcessorPipeline;
@@ -25,7 +24,8 @@ use Laradom\ORM\Mapping\Processor\PrimaryKeyProcessor;
 use Laradom\ORM\Mapping\Processor\TableNameProcessor;
 use Laradom\ORM\Scanning\FileInfo;
 use Laradom\ORM\Scanning\FileScanner;
-use Laradom\ORM\Util\Inflector\EnglishInflector;
+use Laradom\ORM\Util\Inflector\EnglishInflectorStrategy;
+use Laradom\ORM\Util\Naming\DefaultNamingStrategy;
 use Laradom\Tests\Integration\Mapping\TestEntity\Comment;
 use Laradom\Tests\Integration\Mapping\TestEntity\Post;
 use Laradom\Tests\Integration\Mapping\TestEntity\Profile;
@@ -42,7 +42,7 @@ class MetadataValidationTest extends TestCase
         parent::setUp();
 
         $namingStrategy = new DefaultNamingStrategy();
-        $inflector = new EnglishInflector();
+        $inflector = new EnglishInflectorStrategy();
 
         $factory = new MetadataProcessorFactory();
         $driver = new AttributeDriver($factory->create());

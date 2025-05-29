@@ -9,7 +9,6 @@ use Laradom\ORM\Mapping\Driver\AttributeDriver;
 use Laradom\ORM\Mapping\Driver\AttributeHandler\MetadataProcessorFactory;
 use Laradom\ORM\Mapping\EntityMetadata;
 use Laradom\ORM\Mapping\EntityMetadataFactory;
-use Laradom\ORM\Mapping\Naming\DefaultNamingStrategy;
 use Laradom\ORM\Mapping\Processor\ColumnTypeProcessor;
 use Laradom\ORM\Mapping\Processor\FieldNameProcessor;
 use Laradom\ORM\Mapping\Processor\MetadataProcessorPipeline;
@@ -22,7 +21,8 @@ use Laradom\ORM\Mapping\Processor\PostProcessor\UniqueConstraintNamePostProcesso
 use Laradom\ORM\Mapping\Processor\PrimaryKeyProcessor;
 use Laradom\ORM\Mapping\Processor\TableNameProcessor;
 use Laradom\ORM\Scanning\FileScanner;
-use Laradom\ORM\Util\Inflector\EnglishInflector;
+use Laradom\ORM\Util\Inflector\EnglishInflectorStrategy;
+use Laradom\ORM\Util\Naming\DefaultNamingStrategy;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -31,7 +31,7 @@ $store = new ArrayStore();
 $cache = new CacheRepository($store);
 $entityScanner = new FileScanner($filesystem, [__DIR__ . '/Entities']);
 
-$inflector = new EnglishInflector();
+$inflector = new EnglishInflectorStrategy();
 
 $namingStrategy = new DefaultNamingStrategy();
 

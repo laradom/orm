@@ -5,22 +5,22 @@ declare(strict_types=1);
 namespace Laradom\Tests\Unit\Mapping\Processor;
 
 use Laradom\ORM\Mapping\EntityMetadata;
-use Laradom\ORM\Mapping\Naming\NamingStrategyInterface;
 use Laradom\ORM\Mapping\Processor\TableNameProcessor;
-use Laradom\ORM\Util\Inflector\InflectorInterface;
+use Laradom\ORM\Util\Inflector\InflectorStrategyInterface;
+use Laradom\ORM\Util\Naming\NamingStrategyInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 class TableNameProcessorTest extends TestCase
 {
     private MockObject|NamingStrategyInterface $namingStrategy;
-    private InflectorInterface|MockObject $inflector;
+    private InflectorStrategyInterface|MockObject $inflector;
     private TableNameProcessor $processor;
 
     protected function setUp(): void
     {
         $this->namingStrategy = $this->createMock(NamingStrategyInterface::class);
-        $this->inflector = $this->createMock(InflectorInterface::class);
+        $this->inflector = $this->createMock(InflectorStrategyInterface::class);
         $this->processor = new TableNameProcessor($this->namingStrategy, $this->inflector);
     }
 

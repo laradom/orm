@@ -13,6 +13,7 @@ return [
             'auto_invalidate_cache' => true,
             'driver' => Laradom\ORM\Mapping\Driver\AttributeDriver::class,
         ],
-        'naming_strategy' => Laradom\ORM\Mapping\Naming\DefaultNamingStrategy::class,
+        'naming_strategy' => Laradom\ORM\Util\Naming\DefaultNamingStrategy::class,
+        'inflector_strategy' => Laradom\ORM\Util\Inflector\EnglishInflectorStrategy::class,
     ],
 ];

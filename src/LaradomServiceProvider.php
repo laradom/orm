@@ -14,8 +14,6 @@ use Laradom\ORM\Mapping\Driver\AttributeHandler\MetadataProcessor;
 use Laradom\ORM\Mapping\Driver\AttributeHandler\MetadataProcessorFactory;
 use Laradom\ORM\Mapping\Driver\DriverInterface;
 use Laradom\ORM\Mapping\EntityMetadataFactory;
-use Laradom\ORM\Mapping\Naming\DefaultNamingStrategy;
-use Laradom\ORM\Mapping\Naming\NamingStrategyInterface;
 use Laradom\ORM\Mapping\Processor\ColumnTypeProcessor;
 use Laradom\ORM\Mapping\Processor\FieldNameProcessor;
 use Laradom\ORM\Mapping\Processor\MetadataProcessorPipeline;
@@ -28,8 +26,10 @@ use Laradom\ORM\Mapping\Processor\PostProcessor\UniqueConstraintNamePostProcesso
 use Laradom\ORM\Mapping\Processor\PrimaryKeyProcessor;
 use Laradom\ORM\Mapping\Processor\TableNameProcessor;
 use Laradom\ORM\Scanning\FileScanner;
-use Laradom\ORM\Util\Inflector\EnglishInflector;
-use Laradom\ORM\Util\Inflector\InflectorInterface;
+use Laradom\ORM\Util\Inflector\EnglishInflectorStrategy;
+use Laradom\ORM\Util\Inflector\InflectorStrategyInterface;
+use Laradom\ORM\Util\Naming\DefaultNamingStrategy;
+use Laradom\ORM\Util\Naming\NamingStrategyInterface;
 use Throwable;
 
 class LaradomServiceProvider extends ServiceProvider
@@ -77,8 +77,8 @@ class LaradomServiceProvider extends ServiceProvider
             return new (config('laradom.config.naming_strategy', DefaultNamingStrategy::class))();
         });
 
-        $this->app->singleton(InflectorInterface::class, function () {
-            return new EnglishInflector();
+        $this->app->singleton(InflectorStrategyInterface::class, function () {
+            return new (config('laradom.config.inflector_strategy', EnglishInflectorStrategy::class))();
         });
     }
 
@@ -110,7 +110,7 @@ class LaradomServiceProvider extends ServiceProvider
         $this->app->singleton(TableNameProcessor::class, function ($app) {
             return new TableNameProcessor(
                 $app->make(NamingStrategyInterface::class),
-                $app->make(InflectorInterface::class),
+                $app->make(InflectorStrategyInterface::class),
             );
         });
 
@@ -139,14 +139,14 @@ class LaradomServiceProvider extends ServiceProvider
         $this->app->singleton(JoinTablePostProcessor::class, function ($app) {
             return new JoinTablePostProcessor(
                 $app->make(NamingStrategyInterface::class),
-                $app->make(InflectorInterface::class),
+                $app->make(InflectorStrategyInterface::class),
             );
         });
 
         $this->app->singleton(JoinColumnPostProcessor::class, function ($app) {
             return new JoinColumnPostProcessor(
                 $app->make(NamingStrategyInterface::class),
-                $app->make(InflectorInterface::class),
+                $app->make(InflectorStrategyInterface::class),
             );
         });
 

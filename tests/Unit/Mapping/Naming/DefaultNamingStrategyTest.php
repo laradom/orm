@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Laradom\Tests\Unit\Mapping\Naming;
 
-use Laradom\ORM\Mapping\Naming\DefaultNamingStrategy;
+use Laradom\ORM\Util\Naming\DefaultNamingStrategy;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 

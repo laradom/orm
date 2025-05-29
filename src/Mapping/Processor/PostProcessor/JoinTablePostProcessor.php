@@ -8,14 +8,14 @@ use Laradom\ORM\Enum\Attributes\RelationTypes;
 use Laradom\ORM\Mapping\EntityMetadata;
 use Laradom\ORM\Mapping\JoinColumnMetadata;
 use Laradom\ORM\Mapping\JoinTableMetadata;
-use Laradom\ORM\Mapping\Naming\NamingStrategyInterface;
-use Laradom\ORM\Util\Inflector\InflectorInterface;
+use Laradom\ORM\Util\Inflector\InflectorStrategyInterface;
+use Laradom\ORM\Util\Naming\NamingStrategyInterface;
 
 class JoinTablePostProcessor implements EntityMetadataPostProcessorInterface
 {
     public function __construct(
         private readonly NamingStrategyInterface $namingStrategy,
-        private readonly InflectorInterface $inflector,
+        private readonly InflectorStrategyInterface $inflector,
     ) {}
 
     /**

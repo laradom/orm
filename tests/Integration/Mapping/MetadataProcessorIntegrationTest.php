@@ -7,11 +7,11 @@ namespace Laradom\Tests\Integration\Mapping;
 use Laradom\ORM\Enum\Attributes\Types;
 use Laradom\ORM\Mapping\EntityMetadata;
 use Laradom\ORM\Mapping\FieldMetadata;
-use Laradom\ORM\Mapping\Naming\DefaultNamingStrategy;
 use Laradom\ORM\Mapping\Processor\FieldNameProcessor;
 use Laradom\ORM\Mapping\Processor\MetadataProcessorPipeline;
 use Laradom\ORM\Mapping\Processor\TableNameProcessor;
-use Laradom\ORM\Util\Inflector\EnglishInflector;
+use Laradom\ORM\Util\Inflector\EnglishInflectorStrategy;
+use Laradom\ORM\Util\Naming\DefaultNamingStrategy;
 use Laradom\Tests\TestCase;
 
 class MetadataProcessorIntegrationTest extends TestCase
@@ -22,7 +22,7 @@ class MetadataProcessorIntegrationTest extends TestCase
 
     protected function setUp(): void
     {
-        $inflector = new EnglishInflector();
+        $inflector = new EnglishInflectorStrategy();
         $namingStrategy = new DefaultNamingStrategy();
         $this->tableNameProcessor = new TableNameProcessor($namingStrategy, $inflector);
         $this->fieldNameProcessor = new FieldNameProcessor($namingStrategy);

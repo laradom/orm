@@ -9,8 +9,6 @@ use Laradom\ORM\LaradomServiceProvider;
 use Laradom\ORM\Mapping\Driver\AttributeDriver;
 use Laradom\ORM\Mapping\Driver\DriverInterface;
 use Laradom\ORM\Mapping\EntityMetadataFactory;
-use Laradom\ORM\Mapping\Naming\DefaultNamingStrategy;
-use Laradom\ORM\Mapping\Naming\NamingStrategyInterface;
 use Laradom\ORM\Mapping\Processor\ColumnTypeProcessor;
 use Laradom\ORM\Mapping\Processor\FieldNameProcessor;
 use Laradom\ORM\Mapping\Processor\MetadataProcessorPipeline;
@@ -22,8 +20,10 @@ use Laradom\ORM\Mapping\Processor\PostProcessor\JoinTablePostProcessor;
 use Laradom\ORM\Mapping\Processor\PostProcessor\UniqueConstraintNamePostProcessor;
 use Laradom\ORM\Mapping\Processor\PrimaryKeyProcessor;
 use Laradom\ORM\Mapping\Processor\TableNameProcessor;
-use Laradom\ORM\Util\Inflector\EnglishInflector;
-use Laradom\ORM\Util\Inflector\InflectorInterface;
+use Laradom\ORM\Util\Inflector\EnglishInflectorStrategy;
+use Laradom\ORM\Util\Inflector\InflectorStrategyInterface;
+use Laradom\ORM\Util\Naming\DefaultNamingStrategy;
+use Laradom\ORM\Util\Naming\NamingStrategyInterface;
 use Laradom\Tests\TestCase;
 use ReflectionClass;
 
@@ -36,7 +36,7 @@ class LaradomServiceProviderTest extends TestCase
         $this->assertTrue($this->app->bound(MetadataProcessorPipeline::class));
         $this->assertTrue($this->app->bound(EntityMetadataFactory::class));
 
-        $this->assertTrue($this->app->bound(InflectorInterface::class));
+        $this->assertTrue($this->app->bound(InflectorStrategyInterface::class));
         $this->assertTrue($this->app->bound(TableNameProcessor::class));
         $this->assertTrue($this->app->bound(FieldNameProcessor::class));
         $this->assertTrue($this->app->bound(PrimaryKeyProcessor::class));
@@ -72,6 +72,7 @@ class LaradomServiceProviderTest extends TestCase
         $this->assertIsArray(config('laradom.config.entity_paths'));
         $this->assertEquals(AttributeDriver::class, config('laradom.config.metadata.driver'));
         $this->assertEquals(DefaultNamingStrategy::class, config('laradom.config.naming_strategy'));
+        $this->assertEquals(EnglishInflectorStrategy::class, config('laradom.config.inflector_strategy'));
     }
 
     public function testMetadataProcessorPipelineIsConfiguredCorrectly(): void
@@ -133,8 +134,8 @@ class LaradomServiceProviderTest extends TestCase
 
     public function testInflectorIsConfiguredCorrectly(): void
     {
-        $inflector = $this->app->make(InflectorInterface::class);
-        $this->assertInstanceOf(EnglishInflector::class, $inflector);
+        $inflector = $this->app->make(InflectorStrategyInterface::class);
+        $this->assertInstanceOf(EnglishInflectorStrategy::class, $inflector);
     }
 
     public function testMetadataCacheCanBeDisabled(): void
@@ -171,5 +172,6 @@ class LaradomServiceProviderTest extends TestCase
         $app['config']->set('laradom.config.entity_paths', [__DIR__ . '/Entities']);
         $app['config']->set('laradom.config.metadata.driver', AttributeDriver::class);
         $app['config']->set('laradom.config.naming_strategy', DefaultNamingStrategy::class);
+        $app['config']->set('laradom.config.inflector_strategy', EnglishInflectorStrategy::class);
     }
 }

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Laradom\ORM\Mapping\Naming;
+namespace Laradom\ORM\Util\Naming;
 
 interface NamingStrategyInterface
 {

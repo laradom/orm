@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Laradom\ORM\Mapping\Processor;
 
 use Laradom\ORM\Mapping\EntityMetadata;
-use Laradom\ORM\Mapping\Naming\NamingStrategyInterface;
+use Laradom\ORM\Util\Naming\NamingStrategyInterface;
 
 class FieldNameProcessor implements MetadataProcessorInterface
 {

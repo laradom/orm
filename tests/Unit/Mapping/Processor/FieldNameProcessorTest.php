@@ -7,8 +7,8 @@ namespace Laradom\Tests\Unit\Mapping\Processor;
 use Laradom\ORM\Enum\Attributes\Types;
 use Laradom\ORM\Mapping\EntityMetadata;
 use Laradom\ORM\Mapping\FieldMetadata;
-use Laradom\ORM\Mapping\Naming\NamingStrategyInterface;
 use Laradom\ORM\Mapping\Processor\FieldNameProcessor;
+use Laradom\ORM\Util\Naming\NamingStrategyInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 

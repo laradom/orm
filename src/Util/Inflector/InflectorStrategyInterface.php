@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Laradom\ORM\Util\Inflector;
 
-interface InflectorInterface
+interface InflectorStrategyInterface
 {
     public function singularize(string $plural): string;
 
