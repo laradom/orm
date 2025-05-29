@@ -1,0 +1,40 @@
+{
+  "name": "laradom/orm",
+  "type": "library",
+  "description": "Laradom ORM — Data Mapper over Eloquent Query Builder for Laravel",
+  "license": "MIT",
+  "authors": [
+    {"name": "Alexander Levchenkov", "email": "sanjia@live.ru"}
+  ],
+  "require": {
+    "php": "^8.1"
+  },
+  "autoload": {
+    "psr-4": {
+      "Laradom\\ORM\\": "src/",
+      "Laradom\\Examples\\": "examples/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Laradom\\Tests\\": "tests/",
+      "Laradom\\Benchmarks\\": "benchmarks/"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Laradom\\ORM\\LaradomServiceProvider"
+      ]
+    }
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^10.0",
+    "orchestra/testbench": "^8.0|^9.0",
+    "friendsofphp/php-cs-fixer": "^3.75",
+    "phpstan/phpstan": "^2.1",
+    "phpbench/phpbench": "^1.4"
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
+}

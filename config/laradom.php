@@ -1,0 +1,19 @@
+<?php
+
+declare(strict_types=1);
+
+return [
+    'config' => [
+        'entity_paths' => [
+            app_path('Entities'),
+        ],
+        'metadata' => [
+            'cache' => true,
+            'eager_load_metadata' => true,
+            'auto_invalidate_cache' => true,
+            'driver' => Laradom\ORM\Mapping\Driver\AttributeDriver::class,
+        ],
+        'naming_strategy' => Laradom\ORM\Util\Naming\DefaultNamingStrategy::class,
+        'inflector_strategy' => Laradom\ORM\Util\Inflector\EnglishInflectorStrategy::class,
+    ],
+];
