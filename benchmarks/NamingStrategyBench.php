@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Laradom\Benchmarks;
 
-use Laradom\ORM\Mapping\Processor\TableNameProcessor;
 use Laradom\ORM\Util\Inflector\EnglishInflectorStrategy;
 use Laradom\ORM\Util\Naming\NamingStrategyInterface;
 use PhpBench\Attributes as Bench;
